@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
-#include "NYJ_AnimationBlueprints.h" 
 #include "TivaCharacter.generated.h"
 
 class USpringArmComponent;
@@ -16,10 +15,8 @@ struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMyCustomDelegate);
-
 UCLASS(config=Game)
-class ATivaCharacter : public ACharacter, public INYJ_AnimationBlueprints
+class ATivaCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -104,21 +101,8 @@ public:
 	void AimBow();
 	void RelaseBow();
 
-public:
-	virtual void SetBowOnHand(bool bBowOnHand) override;
-	virtual void SetAim(bool bAim) override;
-
 	//UFUNCTION(BlueprintCallable)
 	//void StopRelease();
-
-public:
-	// 이벤트 델리게이트를 선언합니다.
-	UPROPERTY(BlueprintAssignable)
-	FMyCustomDelegate StopRelease;
-
-	// 이벤트를 호출하는 멤버 함수를 정의합니다.
-	UFUNCTION(BlueprintCallable)
-	void CallStopRelease();
 
 };
 

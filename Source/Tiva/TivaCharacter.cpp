@@ -165,31 +165,31 @@ void ATivaCharacter::StopJumpingPlayer()
 
 void ATivaCharacter::ActionRightPressed()
 {
-	if (BowOnHand) {
-		Aim = false;
-		AimBow();
-	}
-	else {
-		BowOnHand = true;
-		Aimable = true;
-		AActor* Character = GetOwner();
-		INYJ_AnimationBlueprints* Interface = Cast<INYJ_AnimationBlueprints>(Character);
-		if (Interface != nullptr)
-		{
-			Interface->SetBowOnHand(BowOnHand);
-		}
-		PlayAnimMontage(StandingEquipBow);
+	//if (BowOnHand) {
+	//	Aim = false;
+	//	AimBow();
+	//}
+	//else {
+		//BowOnHand = true;
+		//Aimable = true;
+		//AActor* Character = GetOwner();
+		//INYJ_AnimationBlueprints* Interface = Cast<INYJ_AnimationBlueprints>(Character);
+		//if (Interface != nullptr)
+		//{
+			//Interface->SetBowOnHand(BowOnHand);
+		//}
+		//PlayAnimMontage(StandingEquipBow);
 
-		UCharacterMovementComponent* CharacterMovement = GetCharacterMovement();
-		if (CharacterMovement)
-		{
+		//UCharacterMovementComponent* CharacterMovement = GetCharacterMovement();
+		//if (CharacterMovement)
+		//{
 			// MaxWalkSpeed 속성 설정
-			CharacterMovement->MaxWalkSpeed = 125.0f;
-		}
-		if (Aimable) {
-			AimBow();
-		}
-	}
+			//CharacterMovement->MaxWalkSpeed = 125.0f;
+		//}
+		//if (Aimable) {
+			//AimBow();
+		//}
+	//}
 }
 
 void ATivaCharacter::ActionRightReleased()
@@ -215,19 +215,4 @@ void ATivaCharacter::AimBow()
 void ATivaCharacter::RelaseBow()
 {
 
-}
-
-void ATivaCharacter::SetBowOnHand(bool bBowOnHand)
-{
-	BowOnHand = bBowOnHand;
-}
-
-void ATivaCharacter::SetAim(bool bAim)
-{
-	Aim = bAim;
-}
-
-void ATivaCharacter::CallStopRelease()
-{
-	StopRelease.Broadcast();
 }
