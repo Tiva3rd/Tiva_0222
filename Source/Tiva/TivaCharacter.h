@@ -69,5 +69,15 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Aim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Aimable = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool BowOnHand;
+
 };
 
