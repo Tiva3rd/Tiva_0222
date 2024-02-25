@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "NYJ_AnimationBlueprints.h" 
 #include "TivaCharacter.generated.h"
 
 class USpringArmComponent;
@@ -18,7 +19,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMyCustomDelegate);
 
 UCLASS(config=Game)
-class ATivaCharacter : public ACharacter
+class ATivaCharacter : public ACharacter, public INYJ_AnimationBlueprints
 {
 	GENERATED_BODY()
 
@@ -78,6 +79,7 @@ public:
 
 	//È° ½î±â
 
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Aim;
 
@@ -89,6 +91,22 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UAnimMontage* StandingDiveForward;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAnimMontage* StandingEquipBow;
+
+	void ActionRightPressed();
+	void ActionRightReleased();
+
+	void ActionLeftPressed();
+	void ActionLeftReleased();
+
+	void AimBow();
+	void RelaseBow();
+
+public:
+	virtual void SetBowOnHand(bool bBowOnHand) override;
+	virtual void SetAim(bool bAim) override;
 
 	//UFUNCTION(BlueprintCallable)
 	//void StopRelease();

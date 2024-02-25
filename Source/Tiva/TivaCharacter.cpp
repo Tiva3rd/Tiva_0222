@@ -71,11 +71,6 @@ void ATivaCharacter::BeginPlay()
 	}
 }
 
-void ATivaCharacter::CallStopRelease()
-{
-	StopRelease.Broadcast();
-}
-
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -98,6 +93,13 @@ void ATivaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
+	PlayerInputComponent->BindAction(TEXT("RightMouse"), EInputEvent::IE_Pressed, this, &ATivaCharacter::ActionRightPressed);
+
+	PlayerInputComponent->BindAction(TEXT("RightMouse"), EInputEvent::IE_Released, this, &ATivaCharacter::ActionRightReleased);
+
+	PlayerInputComponent->BindAction(TEXT("LeftMouse"), EInputEvent::IE_Pressed, this, &ATivaCharacter::ActionLeftPressed);
+
+	PlayerInputComponent->BindAction(TEXT("LeftMouse"), EInputEvent::IE_Released, this, &ATivaCharacter::ActionLeftReleased);
 }
 
 void ATivaCharacter::Move(const FInputActionValue& Value)
@@ -140,7 +142,7 @@ void ATivaCharacter::Look(const FInputActionValue& Value)
 
 void ATivaCharacter::JumpPlayer()
 {
-	if (ACharacter::IsPlayingRootMotion())
+	if (!!ACharacter::IsPlayingRootMotion())
 	{
 		if (!!BowOnHand) {
 			ACharacter::Jump();
@@ -149,21 +151,83 @@ void ATivaCharacter::JumpPlayer()
 			PlayAnimMontage(StandingDiveForward);
 		}
 	}
-	else {
-		ACharacter::Jump();
-	}
 }
 
 void ATivaCharacter::StopJumpingPlayer()
 {
-	if (ACharacter::IsPlayingRootMotion())
+	if (!!ACharacter::IsPlayingRootMotion())
 	{
 		if (!!BowOnHand) {
 			ACharacter::StopJumping();
 		}
 	}
-	else {
-		ACharacter::StopJumping();
+}
+
+void ATivaCharacter::ActionRightPressed()
+{
+	if (BowOnHand) {
+		Aim = false;
+		AimBow();
 	}
-	
+	else {
+		BowOnHand = true;
+		Aimable = true;
+		AActor* Character = GetOwner();
+		INYJ_AnimationBlueprints* Interface = Cast<INYJ_AnimationBlueprints>(Character);
+		if (Interface != nullptr)
+		{
+			Interface->SetBowOnHand(BowOnHand);
+		}
+		PlayAnimMontage(StandingEquipBow);
+
+		UCharacterMovementComponent* CharacterMovement = GetCharacterMovement();
+		if (CharacterMovement)
+		{
+			// MaxWalkSpeed 속성 설정
+			CharacterMovement->MaxWalkSpeed = 125.0f;
+		}
+		if (Aimable) {
+			AimBow();
+		}
+	}
+}
+
+void ATivaCharacter::ActionRightReleased()
+{
+
+}
+
+void ATivaCharacter::ActionLeftPressed()
+{
+
+}
+
+void ATivaCharacter::ActionLeftReleased()
+{
+}
+
+void ATivaCharacter::AimBow()
+{
+
+
+}
+
+void ATivaCharacter::RelaseBow()
+{
+
+}
+
+void ATivaCharacter::SetBowOnHand(bool bBowOnHand)
+{
+	BowOnHand = bBowOnHand;
+}
+
+void ATivaCharacter::SetAim(bool bAim)
+{
+	Aim = bAim;
+}
+
+void ATivaCharacter::CallStopRelease()
+{
+	StopRelease.Broadcast();
 }
