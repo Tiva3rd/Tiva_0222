@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include <Kismet/KismetMathLibrary.h>
+#include "Animation/AnimMontage.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -69,6 +71,11 @@ void ATivaCharacter::BeginPlay()
 	}
 }
 
+void ATivaCharacter::CallStopRelease()
+{
+	StopRelease.Broadcast();
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -78,8 +85,8 @@ void ATivaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ATivaCharacter::JumpPlayer);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ATivaCharacter::StopJumpingPlayer);
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATivaCharacter::Move);
@@ -123,9 +130,40 @@ void ATivaCharacter::Look(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
-
 		// add yaw and pitch input to controller
-		AddControllerYawInput(LookAxisVector.X);
+
+		//화살들고 화면 회전할때 잘 움직이게 하기 위한 계산//
+		AddControllerYawInput(LookAxisVector.X * UKismetMathLibrary::SelectFloat(0.4, 1.0, Aim));
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ATivaCharacter::JumpPlayer()
+{
+	if (ACharacter::IsPlayingRootMotion())
+	{
+		if (!!BowOnHand) {
+			ACharacter::Jump();
+		}
+		else {
+			PlayAnimMontage(StandingDiveForward);
+		}
+	}
+	else {
+		ACharacter::Jump();
+	}
+}
+
+void ATivaCharacter::StopJumpingPlayer()
+{
+	if (ACharacter::IsPlayingRootMotion())
+	{
+		if (!!BowOnHand) {
+			ACharacter::StopJumping();
+		}
+	}
+	else {
+		ACharacter::StopJumping();
+	}
+	
 }

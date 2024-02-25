@@ -15,6 +15,8 @@ struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMyCustomDelegate);
+
 UCLASS(config=Game)
 class ATivaCharacter : public ACharacter
 {
@@ -55,6 +57,10 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void JumpPlayer();
+
+	void StopJumpingPlayer();
 			
 
 protected:
@@ -70,6 +76,8 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	//활 쏘기
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Aim;
 
@@ -78,6 +86,21 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool BowOnHand;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAnimMontage* StandingDiveForward;
+
+	//UFUNCTION(BlueprintCallable)
+	//void StopRelease();
+
+public:
+	// 이벤트 델리게이트를 선언합니다.
+	UPROPERTY(BlueprintAssignable)
+	FMyCustomDelegate StopRelease;
+
+	// 이벤트를 호출하는 멤버 함수를 정의합니다.
+	UFUNCTION(BlueprintCallable)
+	void CallStopRelease();
 
 };
 
