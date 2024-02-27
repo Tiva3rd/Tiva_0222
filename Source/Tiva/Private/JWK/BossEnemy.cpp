@@ -3,12 +3,15 @@
 
 #include "JWK/BossEnemy.h"
 
+#include "JWK/BossFSM.h"
+
 // Sets default values
 ABossEnemy::ABossEnemy()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bossFSM=CreateDefaultSubobject<UBossFSM>(TEXT("bossFSM"));
 
 	swordComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("swordComp"));
 	swordComp->SetupAttachment(GetMesh(), TEXT("hand_rSocket"));
