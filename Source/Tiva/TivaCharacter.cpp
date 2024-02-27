@@ -80,8 +80,8 @@ void ATivaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ATivaCharacter::JumpPlayer);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ATivaCharacter::StopJumpingPlayer);
+		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ATivaCharacter::JumpPlayer);
+		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ATivaCharacter::StopJumpingPlayer);
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATivaCharacter::Move);
@@ -142,25 +142,25 @@ void ATivaCharacter::Look(const FInputActionValue& Value)
 
 void ATivaCharacter::JumpPlayer()
 {
-	if (!!ACharacter::IsPlayingRootMotion())
-	{
-		if (!!BowOnHand) {
-			ACharacter::Jump();
-		}
-		else {
-			PlayAnimMontage(StandingDiveForward);
-		}
-	}
+	//if (!!ACharacter::IsPlayingRootMotion())
+	//{
+		//if (!!BowOnHand) {
+			//ACharacter::Jump();
+		//}
+		//else {
+			//PlayAnimMontage(StandingDiveForward);
+		//}
+	//}
 }
 
 void ATivaCharacter::StopJumpingPlayer()
 {
-	if (!!ACharacter::IsPlayingRootMotion())
-	{
-		if (!!BowOnHand) {
-			ACharacter::StopJumping();
-		}
-	}
+	//if (!!ACharacter::IsPlayingRootMotion())
+	//{
+		//if (!!BowOnHand) {
+			//ACharacter::StopJumping();
+		//}
+	//}
 }
 
 void ATivaCharacter::ActionRightPressed()

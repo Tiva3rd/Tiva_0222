@@ -87,6 +87,9 @@ public:
 	bool BowOnHand;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Pull;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UAnimMontage* StandingDiveForward;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
