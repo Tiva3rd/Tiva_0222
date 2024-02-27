@@ -27,6 +27,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* swordComp;
+
+	// BossFSM 을 컴포넌트로
+	UPROPERTY(EditAnywhere)
+	class UBossFSM* bossFSM;
 };
