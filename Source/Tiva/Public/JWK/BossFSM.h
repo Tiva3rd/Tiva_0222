@@ -52,7 +52,7 @@ public:
 
 	// Boss Attack Range
 	UPROPERTY(EditAnywhere)
-	float attackDist = 200;
+	float attackDistHome = 200;
 	UPROPERTY(EditAnywhere)
 	float attackDistPlayer = 1000;
 

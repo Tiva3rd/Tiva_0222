@@ -31,6 +31,6 @@ public:
 	class UStaticMeshComponent* swordComp;
 
 	// BossFSM 을 컴포넌트로
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UBossFSM* bossFSM;
 };

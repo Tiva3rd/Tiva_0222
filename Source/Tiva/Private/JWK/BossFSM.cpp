@@ -50,15 +50,49 @@ void UBossFSM::TickIdle()
 
 void UBossFSM::TickMove()
 {
-	FVector dir = mainTarget->GetActorLocation() - me->GetActorLocation();
-	dir.Normalize();
+	// Home 과 Enemy_Boss 의 거리
+	FVector dirToHome = mainTarget->GetActorLocation() - me->GetActorLocation();
+	dirToHome.Normalize();
+	float distHome = mainTarget->GetDistanceTo(me);
 
-	me->AddMovementInput(dir);
-	float distance = mainTarget->GetDistanceTo(me);
 
-	if (distance < attackDist)
+	// Player와 Enemy_Boss 의 거리
+	FVector dirToPlayer = playerTarget->GetActorLocation() - me->GetActorLocation();
+	dirToPlayer.Normalize();
+	float distPlayer = playerTarget->GetDistanceTo(me);
+
+	// 만약 EnemyToPlayer 거리가 플레이어 공격 가능 범위보다 멀다면
+	if (distPlayer > attackDistPlayer)
 	{
-		state = EBoss_Enemy::ATTACKHOME;
+		me->AddMovementInput(dirToHome);
+		me->SetActorRotation(dirToHome.ToOrientationRotator());
+
+
+		if (distHome < attackDistHome)
+		{
+			state = EBoss_Enemy::ATTACKHOME;
+		}
+
+		else
+		{
+			state = EBoss_Enemy::MOVE;
+		}
+	}
+
+	// 만약 EnemyToPlayer 거리가 플레이어 공격 가능 범위보다 가깝다면
+	else if(distPlayer <= attackDistPlayer)
+	{
+		me->AddMovementInput(dirToPlayer);
+		me->SetActorRotation(dirToPlayer.ToOrientationRotator());
+		if (distHome < attackDistHome)
+		{
+			state = EBoss_Enemy::ATTACKPLAYER;
+		}
+
+		else
+		{
+			state = EBoss_Enemy::MOVE;
+		}
 	}
 }
 
@@ -66,12 +100,12 @@ void UBossFSM::TickAttackHome()
 {
 	curTime += GetWorld()->GetDeltaSeconds();
 
-	if(curTime > attackWaitTime)
+	if (curTime > attackWaitTime)
 	{
-		curTime=0;
+		curTime = 0;
 		float distance = mainTarget->GetDistanceTo(me);
 
-		if(distance> attackDist)
+		if (distance > attackDistHome)
 		{
 			SetState(EBoss_Enemy::MOVE);
 		}
@@ -79,6 +113,7 @@ void UBossFSM::TickAttackHome()
 		else
 		{
 			// 공격 애니메이션
+			UE_LOG(LogTemp, Log, TEXT("Attack"));
 		}
 	}
 }

@@ -20,6 +20,9 @@ public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float speed=0;
+
 	UPROPERTY()
 	class UBossFSM* bossFSM;
 
@@ -28,9 +31,12 @@ public:
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	class ABossEnemy* me;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bAttack;
+	bool bIsAttacking = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsAttacked = false;
 
 	/*UFUNCTION()
 	void AnimNotify_AttackEnd();
