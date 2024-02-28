@@ -80,8 +80,8 @@ void ATivaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ATivaCharacter::JumpPlayer);
-		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ATivaCharacter::StopJumpingPlayer);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATivaCharacter::Move);
@@ -93,13 +93,6 @@ void ATivaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
-	PlayerInputComponent->BindAction(TEXT("RightMouse"), EInputEvent::IE_Pressed, this, &ATivaCharacter::ActionRightPressed);
-
-	PlayerInputComponent->BindAction(TEXT("RightMouse"), EInputEvent::IE_Released, this, &ATivaCharacter::ActionRightReleased);
-
-	PlayerInputComponent->BindAction(TEXT("LeftMouse"), EInputEvent::IE_Pressed, this, &ATivaCharacter::ActionLeftPressed);
-
-	PlayerInputComponent->BindAction(TEXT("LeftMouse"), EInputEvent::IE_Released, this, &ATivaCharacter::ActionLeftReleased);
 }
 
 void ATivaCharacter::Move(const FInputActionValue& Value)
@@ -135,84 +128,7 @@ void ATivaCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 
 		//화살들고 화면 회전할때 잘 움직이게 하기 위한 계산//
-		AddControllerYawInput(LookAxisVector.X * UKismetMathLibrary::SelectFloat(0.4, 1.0, Aim));
+		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
-}
-
-void ATivaCharacter::JumpPlayer()
-{
-	//if (!!ACharacter::IsPlayingRootMotion())
-	//{
-		//if (!!BowOnHand) {
-			//ACharacter::Jump();
-		//}
-		//else {
-			//PlayAnimMontage(StandingDiveForward);
-		//}
-	//}
-}
-
-void ATivaCharacter::StopJumpingPlayer()
-{
-	//if (!!ACharacter::IsPlayingRootMotion())
-	//{
-		//if (!!BowOnHand) {
-			//ACharacter::StopJumping();
-		//}
-	//}
-}
-
-void ATivaCharacter::ActionRightPressed()
-{
-	//if (BowOnHand) {
-	//	Aim = false;
-	//	AimBow();
-	//}
-	//else {
-		//BowOnHand = true;
-		//Aimable = true;
-		//AActor* Character = GetOwner();
-		//INYJ_AnimationBlueprints* Interface = Cast<INYJ_AnimationBlueprints>(Character);
-		//if (Interface != nullptr)
-		//{
-			//Interface->SetBowOnHand(BowOnHand);
-		//}
-		//PlayAnimMontage(StandingEquipBow);
-
-		//UCharacterMovementComponent* CharacterMovement = GetCharacterMovement();
-		//if (CharacterMovement)
-		//{
-			// MaxWalkSpeed 속성 설정
-			//CharacterMovement->MaxWalkSpeed = 125.0f;
-		//}
-		//if (Aimable) {
-			//AimBow();
-		//}
-	//}
-}
-
-void ATivaCharacter::ActionRightReleased()
-{
-
-}
-
-void ATivaCharacter::ActionLeftPressed()
-{
-
-}
-
-void ATivaCharacter::ActionLeftReleased()
-{
-}
-
-void ATivaCharacter::AimBow()
-{
-
-
-}
-
-void ATivaCharacter::RelaseBow()
-{
-
 }

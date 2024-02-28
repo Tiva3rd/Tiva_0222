@@ -55,10 +55,6 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
-
-	void JumpPlayer();
-
-	void StopJumpingPlayer();
 			
 
 protected:
@@ -73,39 +69,5 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
-	//È° ½î±â
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool Aim;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool Aimable = true;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool BowOnHand;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool Pull;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UAnimMontage* StandingDiveForward;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UAnimMontage* StandingEquipBow;
-
-	void ActionRightPressed();
-	void ActionRightReleased();
-
-	void ActionLeftPressed();
-	void ActionLeftReleased();
-
-	void AimBow();
-	void RelaseBow();
-
-	//UFUNCTION(BlueprintCallable)
-	//void StopRelease();
-
 };
 
