@@ -2,6 +2,10 @@
 
 
 #include "JWK/BossFSM.h"
+
+#include "AIController.h"
+#include "AITypes.h"
+#include "NavigationSystem.h"
 #include "JWK/BossEnemy.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -22,6 +26,7 @@ void UBossFSM::BeginPlay()
 	Super::BeginPlay();
 
 	me = Cast<ABossEnemy>(GetOwner());
+	ai = Cast<AAIController>(me->GetController());
 }
 
 
@@ -50,50 +55,69 @@ void UBossFSM::TickIdle()
 
 void UBossFSM::TickMove()
 {
-	// Home 과 Enemy_Boss 의 거리
-	FVector dirToHome = mainTarget->GetActorLocation() - me->GetActorLocation();
-	dirToHome.Normalize();
+	FVector destinationToHome = mainTarget->GetActorLocation();
+	//// Home 과 Enemy_Boss 의 거리
+	//FVector dirToHome = mainTarget->GetActorLocation() - me->GetActorLocation();
+	//dirToHome.Normalize();
 	float distHome = mainTarget->GetDistanceTo(me);
 
-
-	// Player와 Enemy_Boss 의 거리
-	FVector dirToPlayer = playerTarget->GetActorLocation() - me->GetActorLocation();
-	dirToPlayer.Normalize();
+	FVector destinationToPlayer = playerTarget->GetActorLocation();
+	//// Player와 Enemy_Boss 의 거리
+	//FVector dirToPlayer = playerTarget->GetActorLocation() - me->GetActorLocation();
+	//dirToPlayer.Normalize();
 	float distPlayer = playerTarget->GetDistanceTo(me);
 
 	// 만약 EnemyToPlayer 거리가 플레이어 공격 가능 범위보다 멀다면
 	if (distPlayer > attackDistPlayer)
 	{
-		me->AddMovementInput(dirToHome);
-		me->SetActorRotation(dirToHome.ToOrientationRotator());
+		auto ns = UNavigationSystemV1::GetNavigationSystem(GetWorld());
+		FAIMoveRequest req;
+		req.SetAcceptanceRadius(300);
+		req.SetGoalLocation(destinationToHome);
+		FPathFindingQuery query;
+		ai->BuildPathfindingQuery(req, query);
+		FPathFindingResult r = ns->FindPathSync(query);
+		if (r.Result == ENavigationQueryResult::Success)
+		{
+			// (추적) AI가 목적지를 향해 이동하게 하고싶다.
+			ai->MoveToLocation(destinationToHome, 100);
+		}
+		/*me->AddMovementInput(dirToHome);
+		me->SetActorRotation(dirToHome.ToOrientationRotator());*/
 
 
 		if (distHome < attackDistHome)
 		{
 			state = EBoss_Enemy::ATTACKHOME;
 		}
-
-		else
-		{
-			state = EBoss_Enemy::MOVE;
-		}
+	
 	}
 
 	// 만약 EnemyToPlayer 거리가 플레이어 공격 가능 범위보다 가깝다면
 	else if(distPlayer <= attackDistPlayer)
 	{
-		me->AddMovementInput(dirToPlayer);
-		me->SetActorRotation(dirToPlayer.ToOrientationRotator());
+		ai->MoveToLocation(destinationToPlayer, 100);
+		/*me->AddMovementInput(destinationToPlayer);
+		me->SetActorRotation(destinationToPlayer.ToOrientationRotator());*/
 		if (distHome < attackDistHome)
 		{
 			state = EBoss_Enemy::ATTACKPLAYER;
 		}
 
-		else
-		{
-			state = EBoss_Enemy::MOVE;
-		}
 	}
+	//auto ns = UNavigationSystemV1::GetNavigationSystem(GetWorld());
+	//FAIMoveRequest req;
+	//req.SetAcceptanceRadius(50);
+	//req.SetGoalLocation(destination);
+	//FPathFindingQuery query;
+	//ai->BuildPathfindingQuery(req, query);
+	//FPathFindingResult r = ns->FindPathSync(query);
+	//// 만약 목적지가 길 위라면
+	//if (r.Result == ENavigationQueryResult::Success)
+	//{
+	//	// (추적) AI가 목적지를 향해 이동하게 하고싶다.
+	//	ai->MoveToLocation(destination, 50);
+	//}
 }
 
 void UBossFSM::TickAttackHome()

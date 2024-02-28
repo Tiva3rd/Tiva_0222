@@ -49,6 +49,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EBoss_Enemy state;
 
+	UPROPERTY()
+	class AAIController* ai;
+
 
 	// Boss Attack Range
 	UPROPERTY(EditAnywhere)
