@@ -77,6 +77,8 @@ public:
 	bool Aimable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool BowOnHand;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Pull;
 
 };
 
