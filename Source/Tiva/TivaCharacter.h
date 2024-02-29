@@ -55,6 +55,10 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void JumpA(const FInputActionValue& Value);
+	void StopJumpingA(const FInputActionValue& Value);
+
 			
 
 protected:
@@ -69,5 +73,18 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Aim;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Aimable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool BowOnHand;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAnimMontage> jumpAnimMontage;
+
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* diveAnim;
 };
 

@@ -80,8 +80,8 @@ void ATivaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ATivaCharacter::JumpA);
+		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ATivaCharacter::StopJumpingA);
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATivaCharacter::Move);
@@ -126,9 +126,38 @@ void ATivaCharacter::Look(const FInputActionValue& Value)
 	if (Controller != nullptr)
 	{
 		// add yaw and pitch input to controller
+		
 
 		//화살들고 화면 회전할때 잘 움직이게 하기 위한 계산//
-		AddControllerYawInput(LookAxisVector.X);
+		AddControllerYawInput(LookAxisVector.X * UKismetMathLibrary::SelectFloat(0.2f,1.0f,Aim));
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ATivaCharacter::JumpA(const FInputActionValue& Value)
+{
+	if(false == IsPlayingRootMotion())
+	{
+		if(false == BowOnHand)
+		{
+			ACharacter::Jump();
+		}else
+		{
+			PlayAnimMontage(diveAnim);
+		}
+	}
+		
+}
+
+void ATivaCharacter::StopJumpingA(const FInputActionValue& Value)
+{
+	ACharacter::StopJumping();
+	if (false == IsPlayingRootMotion())
+	{
+		if (false == BowOnHand)
+		{
+			ACharacter::StopJumping();
+		}
+	}
+		
 }
