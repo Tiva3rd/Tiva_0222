@@ -56,9 +56,6 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
-	void JumpA(const FInputActionValue& Value);
-	void StopJumpingA(const FInputActionValue& Value);
-
 			
 
 protected:
@@ -81,10 +78,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool BowOnHand;
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<UAnimMontage> jumpAnimMontage;
-
-	UPROPERTY(EditAnywhere)
-	class UAnimMontage* diveAnim;
 };
 

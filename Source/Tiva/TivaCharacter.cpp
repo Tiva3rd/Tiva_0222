@@ -133,31 +133,3 @@ void ATivaCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
-
-void ATivaCharacter::JumpA(const FInputActionValue& Value)
-{
-	if(false == IsPlayingRootMotion())
-	{
-		if(false == BowOnHand)
-		{
-			ACharacter::Jump();
-		}else
-		{
-			PlayAnimMontage(diveAnim);
-		}
-	}
-		
-}
-
-void ATivaCharacter::StopJumpingA(const FInputActionValue& Value)
-{
-	ACharacter::StopJumping();
-	if (false == IsPlayingRootMotion())
-	{
-		if (false == BowOnHand)
-		{
-			ACharacter::StopJumping();
-		}
-	}
-		
-}
