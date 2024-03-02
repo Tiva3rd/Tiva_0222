@@ -10,26 +10,27 @@ void UBossAnim::NativeInitializeAnimation()
 
 	me = Cast<ABossEnemy>(TryGetPawnOwner());
 
-	if (me != nullptr)
-	{
+	if (nullptr != me)
 		bossFSM = me->bossFSM;
-	}
+
 	else
-	{
 		return;
-	}
 }
 
 void UBossAnim::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
-	if(bossFSM == nullptr) return;
+	if (nullptr == bossFSM) 
+		return;
+
+	state = bossFSM->state;
 }
-//
-//void UBossAnim::AnimNotify_AttackEnd()
-//{
-//}
-//
+
+void UBossAnim::AnimNotify_AttackEnd()
+{
+	//bIsAttacking = false;
+}
+
 //void UBossAnim::AnimNotify_DamageEnd()
 //{
 //}

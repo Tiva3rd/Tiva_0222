@@ -14,7 +14,7 @@ enum class EBoss_Enemy : uint8
 	MOVE			 UMETA(DisplayName = "MOVE"),
 	ATTACKPLAYER     UMETA(DisplayName = "ATTACKPlAYER"),
 	ATTACKHOME		 UMETA(DisplayName = "ATTACKHOME"),
-	TAKEDAMAGE		 UMETA(DisplayName = "TAKEDAMAGE"),
+	ATTACKWAIT		 UMETA(DisplayName = "ATTACKWAIT"),
 	DEAD			 UMETA(DisplayName = "DEAD")
 };
 
@@ -45,12 +45,18 @@ public:
 	UPROPERTY(EditAnywhere)
 	class ABossEnemy* me;
 
+	UPROPERTY(EditAnywhere)
+	class UBossAnim* bossAnim;
+
 	// Boss Enemy¿« State
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EBoss_Enemy state;
 
+	// Boss Enemy ¿« AI
 	UPROPERTY()
 	class AAIController* ai;
+
+
 
 
 	// Boss Attack Range
@@ -58,6 +64,8 @@ public:
 	float attackDistHome = 200;
 	UPROPERTY(EditAnywhere)
 	float attackDistPlayer = 1000;
+
+
 
 private:
 	// Boss Enemy State Function
@@ -73,5 +81,5 @@ private:
 	void SetState(EBoss_Enemy next);
 
 	float curTime;
-	float attackWaitTime = 1;
+	float attackDelayTime = 1.5;
 };

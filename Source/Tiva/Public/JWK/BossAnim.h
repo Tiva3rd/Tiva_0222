@@ -37,16 +37,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsAttacked = false;
-
-	/*UFUNCTION()
+		
+	UFUNCTION()
 	void AnimNotify_AttackEnd();
 
-	UFUNCTION()
-	void AnimNotify_DamageEnd();
+	//UFUNCTION()
+	//void AnimNotify_DamageEnd();
 
-	UFUNCTION()
-	void AnimNotify_DieEnd();
+	//UFUNCTION()
+	//void AnimNotify_DieEnd();
 
-	UFUNCTION()
-	void AnimNotify_Hit();*/
+	//UFUNCTION()
+	//void AnimNotify_Hit();
 };
