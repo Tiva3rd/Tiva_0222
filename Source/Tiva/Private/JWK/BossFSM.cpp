@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JWK/BossFSM.h"
@@ -26,15 +26,15 @@ void UBossFSM::BeginPlay()
 {
 	Super::BeginPlay();
 
-	me = Cast<ABossEnemy>(GetOwner());
-	ai = Cast<AAIController>(me->GetController());
+	me = Cast<ABossEnemy>( GetOwner() );
+	ai = Cast<AAIController>( me->GetController() );
 }
 
 
 // Called every frame
-void UBossFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UBossFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction )
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent( DeltaTime , TickType , ThisTickFunction );
 
 	switch (state)
 	{
@@ -48,83 +48,53 @@ void UBossFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 void UBossFSM::TickIdle()
 {
+	//mainTarget= ;
+	playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (mainTarget)
 	{
-		SetState(EBoss_Enemy::MOVE);
+		SetState( EBoss_Enemy::MOVE );
 	}
 }
 
 void UBossFSM::TickMove()
 {
+	bool chaseHome = bossAnim->bIsChaseHome;      // bossAnim ì—ì„œ bIsChaseHome = true
+	bool chasePlayer = bossAnim->bIsChasePlayer;
+
 	FVector destinationToHome = mainTarget->GetActorLocation();
-	//// Home °ú Enemy_Boss ÀÇ °Å¸®
-	//FVector dirToHome = mainTarget->GetActorLocation() - me->GetActorLocation();
-	//dirToHome.Normalize();
-	float distHome = mainTarget->GetDistanceTo(me);
+	float distanceToHome = mainTarget->GetDistanceTo( me );
 
 	FVector destinationToPlayer = playerTarget->GetActorLocation();
-	//// Player¿Í Enemy_Boss ÀÇ °Å¸®
-	//FVector dirToPlayer = playerTarget->GetActorLocation() - me->GetActorLocation();
-	//dirToPlayer.Normalize();
-	float distPlayer = playerTarget->GetDistanceTo(me);
+	float distanceToPlayer = playerTarget->GetDistanceTo( me );
 
-	auto ns = UNavigationSystemV1::GetNavigationSystem(GetWorld());
+
+	auto ns = UNavigationSystemV1::GetNavigationSystem( GetWorld() );
 	FAIMoveRequest req;
-	req.SetAcceptanceRadius(300);
-	req.SetGoalLocation(destinationToHome);
+	req.SetAcceptanceRadius( 300 );
+	req.SetGoalLocation( destinationToHome );
 	FPathFindingQuery query;
-	ai->BuildPathfindingQuery(req, query);
-	FPathFindingResult r = ns->FindPathSync(query);
+	ai->BuildPathfindingQuery( req , query );
+	FPathFindingResult r = ns->FindPathSync( query );
 
-	// ¸¸¾à EnemyToPlayer °Å¸®°¡ ÇÃ·¹ÀÌ¾î °ø°Ý °¡´É ¹üÀ§º¸´Ù ¸Ö´Ù¸é
-	if (distPlayer > attackDistPlayer)
+
+	// ë§Œì•½ íƒ€ê²Ÿì´ ìžˆë‹¤ë©´
+	if (r.Result == ENavigationQueryResult::Success)
 	{
-		if (r.Result == ENavigationQueryResult::Success)
+		ai->MoveToLocation( destinationToHome , 50 );
+		if (distanceToHome < attackDistance)
 		{
-			// (Ãß°Ý) AI°¡ ¸ñÀûÁö¸¦ ÇâÇØ ÀÌµ¿ÇÏ°Ô ÇÏ°í½Í´Ù.
-			ai->MoveToLocation(destinationToHome, 100);
-		}
-		/*me->AddMovementInput(dirToHome);
-		me->SetActorRotation(dirToHome.ToOrientationRotator());*/
-
-
-		if (distHome < attackDistHome)
-		{
-			state = EBoss_Enemy::ATTACKHOME;
-			//bossAnim->bIsAttacking = true;
+			SetState( EBoss_Enemy::ATTACKHOME );
 		}
 
+		if (distanceToPlayer < chasePlayerReach)
+		{
+			ai->MoveToLocation( destinationToPlayer , 50 );
+			if (distanceToPlayer < attackDistance)
+			{
+				SetState( EBoss_Enemy::ATTACKPLAYER );
+			}
+		}
 	}
-
-	// ¸¸¾à EnemyToPlayer °Å¸®°¡ ÇÃ·¹ÀÌ¾î °ø°Ý °¡´É ¹üÀ§º¸´Ù °¡±õ´Ù¸é
-	else if (distPlayer <= attackDistPlayer)
-	{
-		if (r.Result == ENavigationQueryResult::Success)
-		{
-			// (Ãß°Ý) AI°¡ ¸ñÀûÁö¸¦ ÇâÇØ ÀÌµ¿ÇÏ°Ô ÇÏ°í½Í´Ù.
-			ai->MoveToLocation(destinationToPlayer, 100);
-		}
-
-		if (distPlayer < attackDistPlayer)
-		{
-			state = EBoss_Enemy::ATTACKPLAYER;
-			//bossAnim->bIsAttacking = true;
-		}
-
-	}
-	//auto ns = UNavigationSystemV1::GetNavigationSystem(GetWorld());
-	//FAIMoveRequest req;
-	//req.SetAcceptanceRadius(50);
-	//req.SetGoalLocation(destination);
-	//FPathFindingQuery query;
-	//ai->BuildPathfindingQuery(req, query);
-	//FPathFindingResult r = ns->FindPathSync(query);
-	//// ¸¸¾à ¸ñÀûÁö°¡ ±æ À§¶ó¸é
-	//if (r.Result == ENavigationQueryResult::Success)
-	//{
-	//	// (ÃßÀû) AI°¡ ¸ñÀûÁö¸¦ ÇâÇØ ÀÌµ¿ÇÏ°Ô ÇÏ°í½Í´Ù.
-	//	ai->MoveToLocation(destination, 50);
-	//}
 }
 
 void UBossFSM::TickAttackHome()
@@ -134,19 +104,10 @@ void UBossFSM::TickAttackHome()
 	if (curTime > attackDelayTime)
 	{
 		curTime = 0;
-		float distance = mainTarget->GetDistanceTo(me);
+		float distance = mainTarget->GetDistanceTo( me );
 
-		if (distance > attackDistHome)
-		{
-			SetState(EBoss_Enemy::MOVE);
-		}
-
-		else
-		{
-			// °ø°Ý ¾Ö´Ï¸ÞÀÌ¼Ç
-			UE_LOG(LogTemp, Log, TEXT("Attack"));
-
-		}
+		if (distance > attackDistance || distance < chasePlayerReach)
+			SetState( EBoss_Enemy::MOVE );
 	}
 }
 
@@ -157,19 +118,10 @@ void UBossFSM::TickAttackPlayer()
 	if (curTime > attackDelayTime)
 	{
 		curTime = 0;
-		float distance = playerTarget->GetDistanceTo(me);
+		float distance = playerTarget->GetDistanceTo( me );
 
-		if (distance > attackDistHome)
-		{
-			SetState(EBoss_Enemy::MOVE);
-		}
-
-		else
-		{
-			// °ø°Ý ¾Ö´Ï¸ÞÀÌ¼Ç
-			UE_LOG(LogTemp, Log, TEXT("Attack"));
-			SetState(EBoss_Enemy::ATTACKPLAYER);
-		}
+		if (distance > attackDistance)
+			SetState( EBoss_Enemy::MOVE );
 	}
 }
 
@@ -177,7 +129,7 @@ void UBossFSM::TickDamage()
 {
 }
 
-void UBossFSM::TakeDamage(int damage)
+void UBossFSM::TakeDamage( int damage )
 {
 }
 
@@ -189,7 +141,7 @@ void UBossFSM::DoDamageEnd()
 {
 }
 
-void UBossFSM::SetState(EBoss_Enemy next)
+void UBossFSM::SetState( EBoss_Enemy next )
 {
 	state = next;
 	curTime = 0;

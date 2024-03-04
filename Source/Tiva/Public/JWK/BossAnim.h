@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -33,10 +33,10 @@ public:
 	class ABossEnemy* me;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsAttacking = false;
+	bool bIsChaseHome = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsAttacked = false;
+	bool bIsChasePlayer = false;
 		
 	UFUNCTION()
 	void AnimNotify_AttackEnd();

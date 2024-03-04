@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -35,12 +35,12 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	// ¸ñÀûÁö¸¦ Å×½ºÆ® Pawn --> ¹èÄ¡µÇ¾îÀÖ´Â Pawn Å¬·¡½º FSM Detail ¿¡¼­ ¼öÁ¤
+	// ëª©ì ì§€ë¥¼ í…ŒìŠ¤íŠ¸ Pawn --> ë°°ì¹˜ë˜ì–´ìˆëŠ” Pawn í´ë˜ìŠ¤ FSM Detail ì—ì„œ ìˆ˜ì •
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class APawn* mainTarget;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class ACharacter* playerTarget;
+	UPROPERTY()
+	class AActor* playerTarget;
 
 	UPROPERTY(EditAnywhere)
 	class ABossEnemy* me;
@@ -48,11 +48,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UBossAnim* bossAnim;
 
-	// Boss EnemyÀÇ State
+	// Boss Enemyì˜ State
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EBoss_Enemy state;
 
-	// Boss Enemy ÀÇ AI
+	// Boss Enemy ì˜ AI
 	UPROPERTY()
 	class AAIController* ai;
 
@@ -61,9 +61,9 @@ public:
 
 	// Boss Attack Range
 	UPROPERTY(EditAnywhere)
-	float attackDistHome = 200;
+	float attackDistance = 200;
 	UPROPERTY(EditAnywhere)
-	float attackDistPlayer = 1000;
+	float chasePlayerReach = 800;
 
 
 
@@ -78,8 +78,10 @@ private:
 	void TickDead();
 	void DoDamageEnd();
 
+	float curTime;
+	float attackDelayTime = 3.0f;
+
+public:
 	void SetState(EBoss_Enemy next);
 
-	float curTime;
-	float attackDelayTime = 1.5;
 };
