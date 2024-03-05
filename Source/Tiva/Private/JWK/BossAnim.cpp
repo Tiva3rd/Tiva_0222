@@ -1,8 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JWK/BossAnim.h"
 #include "JWK/BossEnemy.h"
+#include "JWK/BossFSM.h"
 
 void UBossAnim::NativeInitializeAnimation()
 {
@@ -28,7 +29,7 @@ void UBossAnim::NativeUpdateAnimation(float DeltaSeconds)
 
 void UBossAnim::AnimNotify_AttackEnd()
 {
-	//bIsAttacking = false;
+	bIsAttack = false;
 }
 
 //void UBossAnim::AnimNotify_DamageEnd()

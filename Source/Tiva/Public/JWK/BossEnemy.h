@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -30,7 +30,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* swordComp;
 
-	// BossFSM À» ÄÄÆ÷³ÍÆ®·Î
+	// BossFSM ì„ ì»´í¬ë„ŒíŠ¸ë¡œ
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UBossFSM* bossFSM;
 };

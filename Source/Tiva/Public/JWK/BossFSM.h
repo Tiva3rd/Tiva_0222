@@ -12,9 +12,7 @@ enum class EBoss_Enemy : uint8
 {
 	IDLE			 UMETA(DisplayName = "IDLE"),
 	MOVE			 UMETA(DisplayName = "MOVE"),
-	ATTACKPLAYER     UMETA(DisplayName = "ATTACKPlAYER"),
-	ATTACKHOME		 UMETA(DisplayName = "ATTACKHOME"),
-	ATTACKWAIT		 UMETA(DisplayName = "ATTACKWAIT"),
+	ATTACK			 UMETA(DisplayName = "ATTACK"),
 	DEAD			 UMETA(DisplayName = "DEAD")
 };
 
@@ -66,22 +64,19 @@ public:
 	float chasePlayerReach = 800;
 
 
-
-private:
 	// Boss Enemy State Function
 	void TickIdle();
 	void TickMove();
-	void TickAttackHome();
-	void TickAttackPlayer();
+	void TickAttack();
+	//void TickAttackPlayer();
 	void TickDamage();
 	void TakeDamage(int damage);
 	void TickDead();
 	void DoDamageEnd();
 
 	float curTime;
-	float attackDelayTime = 3.0f;
+	float attackDelayTime = 2.0f;
 
-public:
 	void SetState(EBoss_Enemy next);
 
 };

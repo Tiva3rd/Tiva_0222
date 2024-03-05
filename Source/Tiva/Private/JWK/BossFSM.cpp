@@ -8,7 +8,6 @@
 #include "NavigationSystem.h"
 #include "JWK/BossAnim.h"
 #include "JWK/BossEnemy.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UBossFSM::UBossFSM()
@@ -28,6 +27,7 @@ void UBossFSM::BeginPlay()
 
 	me = Cast<ABossEnemy>( GetOwner() );
 	ai = Cast<AAIController>( me->GetController() );
+	bossAnim = Cast<UBossAnim>( me->GetMesh()->GetAnimInstance() );
 }
 
 
@@ -40,8 +40,7 @@ void UBossFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComp
 	{
 	case EBoss_Enemy::IDLE:				        TickIdle();				break;
 	case EBoss_Enemy::MOVE:				        TickMove();				break;
-	case EBoss_Enemy::ATTACKHOME:				TickAttackHome();		break;
-	case EBoss_Enemy::ATTACKPLAYER:				TickAttackPlayer();		break;
+	case EBoss_Enemy::ATTACK:					TickAttack();			break;
 	case EBoss_Enemy::DEAD:				        TickDead();				break;
 	}
 }
@@ -80,24 +79,26 @@ void UBossFSM::TickMove()
 	// 만약 타겟이 있다면
 	if (r.Result == ENavigationQueryResult::Success)
 	{
-		ai->MoveToLocation( destinationToHome , 50 );
+		ai->MoveToLocation( destinationToHome , 100 );
 		if (distanceToHome < attackDistance)
 		{
-			SetState( EBoss_Enemy::ATTACKHOME );
+			SetState( EBoss_Enemy::ATTACK );
+			bossAnim->bIsAttack = true;
 		}
 
-		if (distanceToPlayer < chasePlayerReach)
+		else if (distanceToPlayer < chasePlayerReach)
 		{
-			ai->MoveToLocation( destinationToPlayer , 50 );
+			ai->MoveToLocation( destinationToPlayer , 100 );
 			if (distanceToPlayer < attackDistance)
 			{
-				SetState( EBoss_Enemy::ATTACKPLAYER );
+				SetState( EBoss_Enemy::ATTACK );
+				bossAnim->bIsAttack = true;
 			}
 		}
 	}
 }
 
-void UBossFSM::TickAttackHome()
+void UBossFSM::TickAttack()
 {
 	curTime += GetWorld()->GetDeltaSeconds();
 
@@ -106,22 +107,10 @@ void UBossFSM::TickAttackHome()
 		curTime = 0;
 		float distance = mainTarget->GetDistanceTo( me );
 
-		if (distance > attackDistance || distance < chasePlayerReach)
+		if (distance > attackDistance/* || distance < chasePlayerReach*/)
 			SetState( EBoss_Enemy::MOVE );
-	}
-}
-
-void UBossFSM::TickAttackPlayer()
-{
-	curTime += GetWorld()->GetDeltaSeconds();
-
-	if (curTime > attackDelayTime)
-	{
-		curTime = 0;
-		float distance = playerTarget->GetDistanceTo( me );
-
-		if (distance > attackDistance)
-			SetState( EBoss_Enemy::MOVE );
+		else
+			bossAnim->bIsAttack = true;
 	}
 }
 
