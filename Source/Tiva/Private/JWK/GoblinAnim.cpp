@@ -5,6 +5,7 @@
 
 #include "JWK/GoblinEnemy.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 
 void UGoblinAnim::NativeInitializeAnimation()
 {
@@ -31,12 +32,18 @@ void UGoblinAnim::NativeUpdateAnimation( float DeltaSeconds )
 
 void UGoblinAnim::AnimNotify_AttackStart()
 {
-	FTransform s = this->GetSkelMeshComponent() ->GetSocketTransform( TEXT( "FireAttack" ) );
+	FTransform s = this->GetSkelMeshComponent()->GetSocketTransform( TEXT( "FireAttack" ) );
 
-	UGameplayStatics::SpawnEmitterAtLocation( GetWorld() , fireAttack , s );
+	fire = UGameplayStatics::SpawnEmitterAtLocation( GetWorld() , fireAttack , s );
+
+	FTimerHandle handle;
+	GetWorld()->GetTimerManager().SetTimer(handle, [&]()
+	{
+		fire->DestroyComponent();
+	}, 2.5, false);
 }
 
 void UGoblinAnim::AnimNotify_AttackEnd()
 {
-	bIsAttack = true;
+	bIsAttack = false;
 }

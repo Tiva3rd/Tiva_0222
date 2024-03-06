@@ -49,4 +49,8 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_AttackEnd();
+
+	UPROPERTY()
+	class UParticleSystemComponent* fire;
+
 };

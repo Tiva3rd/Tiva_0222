@@ -85,7 +85,7 @@ void UGoblinFSM::TickMove()
 		else if (distanceToPlayer < chasePlayerReach)
 		{
 			ai->MoveToLocation( destinationToPlayer , 100 );
-			if (distanceToPlayer < attackDistance)
+			if (distanceToPlayer <= attackDistance)
 			{
 				SetState( EGoblin_Enemy::ATTACK );
 				goblinAnim->bIsAttack = true;
@@ -104,7 +104,7 @@ void UGoblinFSM::TickAttack()
 		curTime = 0;
 		float distance = mainTarget->GetDistanceTo( me );
 
-		if (distance > attackDistance)
+		if (distance >= attackDistance)
 			SetState( EGoblin_Enemy::MOVE );
 		else
 			goblinAnim->bIsAttack = true;
