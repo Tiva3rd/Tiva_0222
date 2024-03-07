@@ -74,7 +74,7 @@ public:
 	void DoDamageEnd();
 
 	float curTime;
-	float attackDelayTime = 2.0f;
+	float attackDelayTime = 3.5f;
 
 	void SetState( EGoblin_Enemy next );
 };

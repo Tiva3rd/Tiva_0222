@@ -18,6 +18,7 @@ AGoblinEnemy::AGoblinEnemy()
 void AGoblinEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	bIsDie = false;
 }
 
 // Called every frame

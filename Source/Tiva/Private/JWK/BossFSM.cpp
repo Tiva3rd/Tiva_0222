@@ -94,7 +94,6 @@ void UBossFSM::TickMove()
 	ai->BuildPathfindingQuery( req , query );
 	FPathFindingResult r = ns->FindPathSync( query );
 
-
 	// 만약 타겟이 있다면
 	if (r.Result == ENavigationQueryResult::Success)
 	{
@@ -115,6 +114,9 @@ void UBossFSM::TickMove()
 			}
 		}
 	}
+
+	else
+		return;
 }
 
 

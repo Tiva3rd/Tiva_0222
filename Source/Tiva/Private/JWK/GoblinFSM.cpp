@@ -106,7 +106,8 @@ void UGoblinFSM::TickMove()
 			}
 		}
 	}
-
+	else
+		return;
 }
 
 void UGoblinFSM::TickAttack()
