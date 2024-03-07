@@ -53,7 +53,7 @@ public:
 	UFUNCTION()
 	void AnimNotify_AttackEnd();
 
-	UPROPERTY()
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class UParticleSystemComponent* fire;
 
 };

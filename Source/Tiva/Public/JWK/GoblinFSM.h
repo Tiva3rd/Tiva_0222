@@ -37,7 +37,7 @@ public:
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class AhouseTargetColumn* mainTarget;
 
-	UPROPERTY()
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class AActor* playerTarget;
 
 	UPROPERTY( EditAnywhere )
@@ -51,7 +51,7 @@ public:
 	EGoblin_Enemy state;
 
 	// Goblin Enemy 의 AI
-	UPROPERTY()
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class AAIController* ai;
 
 
