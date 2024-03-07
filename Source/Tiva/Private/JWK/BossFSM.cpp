@@ -84,7 +84,7 @@ void UBossFSM::TickMove()
 
 	auto ns = UNavigationSystemV1::GetNavigationSystem( GetWorld() );
 	FAIMoveRequest req;
-	req.SetAcceptanceRadius( 300 );
+	req.SetAcceptanceRadius( 2000 );
 	req.SetGoalLocation( destinationToHome );
 	FPathFindingQuery query;
 	ai->BuildPathfindingQuery( req , query );
