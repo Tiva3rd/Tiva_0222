@@ -19,7 +19,14 @@ class TIVA_API UNYJ_PlayerWidget : public UUserWidget
 
 	UPROPERTY( EditAnywhere, meta = (BindWidget) )
 	class UTextBlock* TestTextBlock;
+
+	UPROPERTY( EditDefaultsOnly , meta = (BindWidget) )
+	class UImage* Weapon_Bow;
+
+	UPROPERTY( EditDefaultsOnly , meta = (BindWidget) )
+	class UImage* Weapon_Axe;
+
+	UPROPERTY( EditDefaultsOnly , meta = (BindWidget) )
+	class UImage* Weapon_Build;
 	
-	//UPROPERTY( EditDefaultsOnly , BlueprintReadWrite )
-	//float hp = 1.0f;
 };
