@@ -8,6 +8,8 @@
 #include "NavigationSystem.h"
 #include "JWK/BossAnim.h"
 #include "JWK/BossEnemy.h"
+#include "Kismet/GameplayStatics.h"
+#include "OJS/houseTargetColumn.h"
 
 // Sets default values for this component's properties
 UBossFSM::UBossFSM()
@@ -28,6 +30,19 @@ void UBossFSM::BeginPlay()
 	me = Cast<ABossEnemy>( GetOwner() );
 	ai = Cast<AAIController>( me->GetController() );
 	bossAnim = Cast<UBossAnim>( me->GetMesh()->GetAnimInstance() );
+
+	TArray<AActor*> TempArray;
+	UGameplayStatics::GetAllActorsOfClass( GetWorld() , AhouseTargetColumn::StaticClass() , TempArray );
+	for (int32 i = 0; i < TempArray.Num(); ++i)
+	{
+		mainTarget = Cast<AhouseTargetColumn>( TempArray[i] );
+
+		if (mainTarget->GetActorLabel().Contains( TEXT( "BP_houseTargetColumn" ) ))
+		{
+			break;
+		}
+	}
+
 }
 
 
@@ -47,7 +62,6 @@ void UBossFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComp
 
 void UBossFSM::TickIdle()
 {
-	//mainTarget= ;
 	playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (mainTarget)
 	{

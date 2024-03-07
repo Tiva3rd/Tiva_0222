@@ -8,7 +8,7 @@
 #include "GoblinAnim.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class TIVA_API UGoblinAnim : public UAnimInstance
@@ -41,10 +41,13 @@ public:
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	bool bIsAttack = false;
 
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	bool bIsFire = false;
+
 	UFUNCTION()
 	void AnimNotify_AttackStart();
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class UParticleSystem* fireAttack;
 
 	UFUNCTION()

@@ -7,6 +7,8 @@
 #include "NavigationSystem.h"
 #include "JWK/GoblinAnim.h"
 #include "JWK/GoblinEnemy.h"
+#include "Kismet/GameplayStatics.h"
+#include "OJS/houseTargetColumn.h"
 
 // Sets default values for this component's properties
 UGoblinFSM::UGoblinFSM()
@@ -24,17 +26,28 @@ void UGoblinFSM::BeginPlay()
 {
 	Super::BeginPlay();
 
-	me = Cast<AGoblinEnemy>(GetOwner());
-	ai = Cast<AAIController>(me->GetController());
-	goblinAnim = Cast<UGoblinAnim>(me->GetMesh()->GetAnimInstance());
-	
+	me = Cast<AGoblinEnemy>( GetOwner() );
+	ai = Cast<AAIController>( me->GetController() );
+	goblinAnim = Cast<UGoblinAnim>( me->GetMesh()->GetAnimInstance() );
+
+	TArray<AActor*> TempArray;
+	UGameplayStatics::GetAllActorsOfClass( GetWorld() , AhouseTargetColumn::StaticClass() , TempArray );
+	for (int32 i = 0; i < TempArray.Num(); ++i)
+	{
+		mainTarget = Cast<AhouseTargetColumn>( TempArray[i] );
+
+		if (mainTarget->GetActorLabel().Contains( TEXT( "BP_houseTargetColumn" ) ))
+		{
+			break;
+		}
+	}
 }
 
 
 // Called every frame
-void UGoblinFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UGoblinFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction )
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent( DeltaTime , TickType , ThisTickFunction );
 
 	switch (state)
 	{
@@ -78,7 +91,7 @@ void UGoblinFSM::TickMove()
 		ai->MoveToLocation( destinationToHome , 100 );
 		if (distanceToHome < attackDistance)
 		{
-			SetState(EGoblin_Enemy::ATTACK );
+			SetState( EGoblin_Enemy::ATTACK );
 			goblinAnim->bIsAttack = true;
 		}
 
@@ -115,7 +128,7 @@ void UGoblinFSM::TickDamage()
 {
 }
 
-void UGoblinFSM::TakeDamage(int damage)
+void UGoblinFSM::TakeDamage( int damage )
 {
 }
 
@@ -127,7 +140,7 @@ void UGoblinFSM::DoDamageEnd()
 {
 }
 
-void UGoblinFSM::SetState(EGoblin_Enemy next)
+void UGoblinFSM::SetState( EGoblin_Enemy next )
 {
 	state = next;
 	curTime = 0;

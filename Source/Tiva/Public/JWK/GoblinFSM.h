@@ -35,7 +35,7 @@ public:
 
 	// 목적지를 테스트 Pawn --> 배치되어있는 Pawn 클래스 FSM Detail 에서 수정
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
-	class APawn* mainTarget;
+	class AhouseTargetColumn* mainTarget;
 
 	UPROPERTY()
 	class AActor* playerTarget;
