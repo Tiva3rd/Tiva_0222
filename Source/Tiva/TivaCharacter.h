@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -79,6 +79,12 @@ public:
 	bool BowOnHand;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Pull;
+
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	float playerHP = 50.0f;
+
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	float maxPlayerHP = 50.0f;
 
 };
 
