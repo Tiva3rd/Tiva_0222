@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -13,5 +13,11 @@ UCLASS()
 class TIVA_API UBossHPWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+
+	UPROPERTY( EditAnywhere , meta = (BindWidget) )
+	class UProgressBar* BossHPBar;
+
+	void SetBosstHP( int32 BosstHP , int32 BossMaxHP );
 };

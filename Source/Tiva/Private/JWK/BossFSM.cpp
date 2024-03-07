@@ -149,7 +149,7 @@ void UBossFSM::TickAttack()
 //////////////////////////////////////// DEAD ////////////////////////////////////////
 void UBossFSM::TickDead()
 {
-	me->GetCharacterMovement()->SetMovementMode(MOVE_None);
+	me->GetCharacterMovement()->SetMovementMode( MOVE_None );
 }
 
 void UBossFSM::SetState( EBoss_Enemy next )

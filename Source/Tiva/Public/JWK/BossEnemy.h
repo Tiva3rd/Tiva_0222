@@ -43,6 +43,17 @@ public:
 	void BossTakeDamaged( int32 damage );
 
 
+	//////////////////////////////////////// Boss Widget ////////////////////////////////////////
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	class UWidgetComponent* bossHealthUI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UBossHPWidget* bossHPWidget;
+
+	UFUNCTION()
+	void MakeBilboard();
+
+
 	UPROPERTY( EditAnywhere )
 	int32 BossMaxHP = 10;
 
