@@ -27,10 +27,31 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
+	//////////////////////////////////////// 컴포넌트 ////////////////////////////////////////
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* swordComp;
 
-	// BossFSM 을 컴포넌트로
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UBossFSM* bossFSM;
+
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	class UCharacterMovementComponent* movementComp;
+
+
+	//////////////////////////////////////// Damaged ////////////////////////////////////////
+	UFUNCTION( BlueprintCallable )
+	void BossTakeDamaged( int32 damage );
+
+
+	UPROPERTY( EditAnywhere )
+	int32 BossMaxHP = 10;
+
+	UPROPERTY( EditAnywhere )
+	int32 BossHP = BossMaxHP;
+
+	UPROPERTY( EditAnywhere )
+	bool bIsAttacked = false;
+
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	bool bIsDie = false;
 };

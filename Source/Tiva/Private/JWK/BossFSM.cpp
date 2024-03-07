@@ -62,6 +62,8 @@ void UBossFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComp
 	}
 }
 
+
+//////////////////////////////////////// IDLE ////////////////////////////////////////
 void UBossFSM::TickIdle()
 {
 	playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
@@ -70,6 +72,8 @@ void UBossFSM::TickIdle()
 		SetState( EBoss_Enemy::MOVE );
 }
 
+
+//////////////////////////////////////// MOVE ////////////////////////////////////////
 void UBossFSM::TickMove()
 {
 	bool chaseHome = bossAnim->bIsChaseHome;      // bossAnim 에서 bIsChaseHome = true
@@ -113,6 +117,8 @@ void UBossFSM::TickMove()
 	}
 }
 
+
+//////////////////////////////////////// ATTACK ////////////////////////////////////////
 void UBossFSM::TickAttack()
 {
 	curTime += GetWorld()->GetDeltaSeconds();
@@ -127,14 +133,6 @@ void UBossFSM::TickAttack()
 		else
 			bossAnim->bIsAttack = true;
 	}
-}
-
-void UBossFSM::TickDamage()
-{
-}
-
-void UBossFSM::TakeDamage( int damage )
-{
 }
 
 void UBossFSM::TickDead()

@@ -7,16 +7,16 @@
 #include "BossFSM.generated.h"
 
 
-UENUM(BlueprintType)
+UENUM( BlueprintType )
 enum class EBoss_Enemy : uint8
 {
-	IDLE			 UMETA(DisplayName = "IDLE"),
-	MOVE			 UMETA(DisplayName = "MOVE"),
-	ATTACK			 UMETA(DisplayName = "ATTACK"),
-	DEAD			 UMETA(DisplayName = "DEAD")
+	IDLE			 UMETA( DisplayName = "IDLE" ) ,
+	MOVE			 UMETA( DisplayName = "MOVE" ) ,
+	ATTACK			 UMETA( DisplayName = "ATTACK" ) ,
+	DEAD			 UMETA( DisplayName = "DEAD" )
 };
 
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS( ClassGroup = (Custom) , meta = (BlueprintSpawnableComponent) )
 class TIVA_API UBossFSM : public UActorComponent
 {
 	GENERATED_BODY()
@@ -31,26 +31,26 @@ protected:
 
 public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent( float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction ) override;
 
 	// 목적지를 테스트 Pawn --> 배치되어있는 Pawn 클래스 FSM Detail 에서 수정
 	//UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	//class APawn* mainTarget;
 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	UPROPERTY( EditAnywhere , BlueprintReadOnly )
 	class AhouseTargetColumn* mainTarget;
 
 	UPROPERTY()
 	class AActor* playerTarget;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY( EditAnywhere )
 	class ABossEnemy* me;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY( EditAnywhere )
 	class UBossAnim* bossAnim;
 
 	// Boss Enemy의 State
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY( EditAnywhere , BlueprintReadOnly )
 	EBoss_Enemy state;
 
 	// Boss Enemy 의 AI
@@ -61,9 +61,9 @@ public:
 
 
 	// Boss Attack Range
-	UPROPERTY(EditAnywhere)
+	UPROPERTY( EditAnywhere )
 	float attackDistance = 200;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY( EditAnywhere )
 	float chasePlayerReach = 800;
 
 
@@ -71,15 +71,18 @@ public:
 	void TickIdle();
 	void TickMove();
 	void TickAttack();
-	//void TickAttackPlayer();
-	void TickDamage();
-	void TakeDamage(int damage);
 	void TickDead();
 	void DoDamageEnd();
 
 	float curTime;
 	float attackDelayTime = 2.0f;
 
-	void SetState(EBoss_Enemy next);
+	void SetState( EBoss_Enemy next );
+
+
+
+	
+
+
 
 };

@@ -34,3 +34,15 @@ void AGoblinEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 }
 
+void AGoblinEnemy::BossTakeDamaged(int32 damage)
+{
+	BossHP -= damage;
+
+	if (BossHP <= 0)
+	{
+		BossHP = 0;
+
+		bIsDie = true;
+	}
+}
+

@@ -29,4 +29,23 @@ public:
 	// GoblinFSM 을 컴포넌트로
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class UGoblinFSM* goblinFSM;
+
+
+
+	//////////////////////////////////////// 공격 당함 ////////////////////////////////////////
+	UFUNCTION( BlueprintCallable )
+	void BossTakeDamaged( int32 damage );
+
+
+	UPROPERTY( EditAnywhere )
+	int32 BossMaxHP = 10;
+
+	UPROPERTY( EditAnywhere )
+	int32 BossHP = BossMaxHP;
+
+	UPROPERTY( EditAnywhere )
+	bool bIsAttacked = false;
+
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	bool bIsDie = false;
 };
