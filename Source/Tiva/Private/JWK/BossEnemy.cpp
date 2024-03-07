@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JWK/BossEnemy.h"
@@ -16,7 +16,7 @@ ABossEnemy::ABossEnemy()
 	swordComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("swordComp"));
 	swordComp->SetupAttachment(GetMesh(), TEXT("hand_rSocket"));
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh>tempSword(TEXT("/Script/Engine.StaticMesh'/Game/00_JWK/ABP/Boss/Sword/AatroxSword.AatroxSword'"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh>tempSword(TEXT("/Script/Engine.StaticMesh'/Game/00_JWK/Blueprint/BP_Enemy/Boss/AatroxSword.AatroxSword'"));
 
 	if(tempSword.Succeeded())
 	{
