@@ -41,6 +41,9 @@ void UGoblinFSM::BeginPlay()
 			break;
 		}
 	}
+
+	if (nullptr == mainTarget)
+		return;
 }
 
 
@@ -62,9 +65,7 @@ void UGoblinFSM::TickIdle()
 {
 	playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (mainTarget)
-	{
 		SetState( EGoblin_Enemy::MOVE );
-	}
 }
 
 void UGoblinFSM::TickMove()

@@ -43,6 +43,8 @@ void UBossFSM::BeginPlay()
 		}
 	}
 
+	if (nullptr == mainTarget)
+		return;
 }
 
 
@@ -63,10 +65,9 @@ void UBossFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComp
 void UBossFSM::TickIdle()
 {
 	playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
+
 	if (mainTarget)
-	{
 		SetState( EBoss_Enemy::MOVE );
-	}
 }
 
 void UBossFSM::TickMove()
