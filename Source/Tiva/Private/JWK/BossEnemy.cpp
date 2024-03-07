@@ -58,8 +58,6 @@ void ABossEnemy::BossTakeDamaged( int32 damage )
 
 	if (BossHP <= 0)
 	{
-		movementComp->MaxWalkSpeed = 0;
-
 		bIsDie = true;
 
 		BossHP = 0;

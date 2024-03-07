@@ -56,4 +56,5 @@ public:
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class UParticleSystemComponent* fire;
 
+
 };

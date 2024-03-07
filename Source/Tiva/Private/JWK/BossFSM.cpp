@@ -5,7 +5,9 @@
 
 #include "AIController.h"
 #include "AITypes.h"
+#include "BlueprintEditor.h"
 #include "NavigationSystem.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/BossAnim.h"
 #include "JWK/BossEnemy.h"
 #include "Kismet/GameplayStatics.h"
@@ -115,8 +117,11 @@ void UBossFSM::TickMove()
 		}
 	}
 
-	else
+	else if (r.Result == ENavigationQueryResult::Fail)
 		return;
+
+	if (me->bIsDie == true)
+		SetState( EBoss_Enemy::DEAD );
 }
 
 
@@ -135,14 +140,16 @@ void UBossFSM::TickAttack()
 		else
 			bossAnim->bIsAttack = true;
 	}
+
+	if (me->bIsDie == true)
+		SetState( EBoss_Enemy::DEAD );
 }
 
+
+//////////////////////////////////////// DEAD ////////////////////////////////////////
 void UBossFSM::TickDead()
 {
-}
-
-void UBossFSM::DoDamageEnd()
-{
+	me->GetCharacterMovement()->SetMovementMode(MOVE_None);
 }
 
 void UBossFSM::SetState( EBoss_Enemy next )

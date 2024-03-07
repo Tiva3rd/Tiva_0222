@@ -44,12 +44,6 @@ public:
 	UFUNCTION()
 	void AnimNotify_AttackEnd();
 
-	//UFUNCTION()
-	//void AnimNotify_DamageEnd();
-
-	//UFUNCTION()
-	//void AnimNotify_DieEnd();
-
-	//UFUNCTION()
-	//void AnimNotify_Hit();
+	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	class ABossEnemy* bIsDie;
 };

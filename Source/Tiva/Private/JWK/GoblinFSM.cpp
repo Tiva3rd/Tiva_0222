@@ -5,6 +5,7 @@
 
 #include "AIController.h"
 #include "NavigationSystem.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/GoblinAnim.h"
 #include "JWK/GoblinEnemy.h"
 #include "Kismet/GameplayStatics.h"
@@ -106,8 +107,11 @@ void UGoblinFSM::TickMove()
 			}
 		}
 	}
-	else
+	else if (r.Result == ENavigationQueryResult::Fail)
 		return;
+
+	if (me->bIsDie == true)
+		SetState( EGoblin_Enemy::DEAD );
 }
 
 void UGoblinFSM::TickAttack()
@@ -124,22 +128,16 @@ void UGoblinFSM::TickAttack()
 		else
 			goblinAnim->bIsAttack = true;
 	}
+
+	if (me->bIsDie == true)
+		SetState( EGoblin_Enemy::DEAD );
 }
 
-void UGoblinFSM::TickDamage()
-{
-}
 
-void UGoblinFSM::TakeDamage( int damage )
-{
-}
-
+//////////////////////////////////////// DEAD ////////////////////////////////////////
 void UGoblinFSM::TickDead()
 {
-}
-
-void UGoblinFSM::DoDamageEnd()
-{
+	me->GetCharacterMovement()->SetMovementMode(MOVE_None);
 }
 
 void UGoblinFSM::SetState( EGoblin_Enemy next )

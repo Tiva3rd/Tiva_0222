@@ -68,10 +68,7 @@ public:
 	void TickIdle();
 	void TickMove();
 	void TickAttack();
-	void TickDamage();
-	void TakeDamage( int damage );
 	void TickDead();
-	void DoDamageEnd();
 
 	float curTime;
 	float attackDelayTime = 3.5f;

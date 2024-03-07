@@ -30,18 +30,21 @@ public:
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class UGoblinFSM* goblinFSM;
 
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	class UCharacterMovementComponent* movementComp;
+
 
 
 	//////////////////////////////////////// 공격 당함 ////////////////////////////////////////
 	UFUNCTION( BlueprintCallable )
-	void BossTakeDamaged( int32 damage );
+	void GoblinTakeDamaged( int32 damage );
 
 
 	UPROPERTY( EditAnywhere )
-	int32 BossMaxHP = 10;
+	int32 GoblinMaxHP = 3;
 
 	UPROPERTY( EditAnywhere )
-	int32 BossHP = BossMaxHP;
+	int32 GoblinHP = GoblinMaxHP;
 
 	UPROPERTY( EditAnywhere )
 	bool bIsAttacked = false;

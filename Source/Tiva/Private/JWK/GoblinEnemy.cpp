@@ -3,6 +3,7 @@
 
 #include "JWK/GoblinEnemy.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/GoblinFSM.h"
 
 // Sets default values
@@ -12,6 +13,8 @@ AGoblinEnemy::AGoblinEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 
 	goblinFSM = CreateDefaultSubobject<UGoblinFSM>( TEXT( "goblinFSM" ) );
+
+	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("movementComp"));
 }
 
 // Called when the game starts or when spawned
@@ -35,13 +38,13 @@ void AGoblinEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 }
 
-void AGoblinEnemy::BossTakeDamaged(int32 damage)
+void AGoblinEnemy::GoblinTakeDamaged(int32 damage)
 {
-	BossHP -= damage;
+	GoblinHP -= damage;
 
-	if (BossHP <= 0)
+	if (GoblinHP <= 0)
 	{
-		BossHP = 0;
+		GoblinHP = 0;
 
 		bIsDie = true;
 	}
