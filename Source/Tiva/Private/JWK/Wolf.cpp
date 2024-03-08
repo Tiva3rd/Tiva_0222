@@ -1,7 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "JWK/Wolf.h"
+
+#include "GameFramework/CharacterMovementComponent.h"
+#include "JWK/WolfFSM.h"
 
 // Sets default values
 AWolf::AWolf()
@@ -9,6 +12,7 @@ AWolf::AWolf()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>( TEXT( "movementComp" ) );
 }
 
 // Called when the game starts or when spawned
@@ -30,5 +34,9 @@ void AWolf::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AWolf::FoxTakeDamage(float damage)
+{
 }
 

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -19,11 +19,38 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick( float DeltaTime ) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
 
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	class UWolfFSM* wolfFSM;
+
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	class UCharacterMovementComponent* movementComp;
+
+
+	//////////////////////////////////////// Damaged ////////////////////////////////////////
+	UFUNCTION( BlueprintCallable )
+	void FoxTakeDamage( float damage );
+
+	UPROPERTY( EditAnywhere )
+	int32 FoxMaxHP = 3;
+
+	UPROPERTY( EditAnywhere )
+	int32 FoxHP = FoxMaxHP;
+
+	UPROPERTY( EditAnywhere )
+	bool bIsAttacked = false;
+
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	bool bIsDie = false;
+
+
+	//////////////////////////////////////// 플레이어 대미지 처리 ////////////////////////////////////////
+	UPROPERTY( EditAnywhere )
+	class ATivaCharacter* player;
 };
