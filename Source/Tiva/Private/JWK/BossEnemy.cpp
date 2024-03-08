@@ -11,6 +11,7 @@
 #include "JWK/BossHPWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Tiva/TivaCharacter.h"
 
 // Sets default values
 ABossEnemy::ABossEnemy()
@@ -71,18 +72,12 @@ void ABossEnemy::SetupPlayerInputComponent( UInputComponent* PlayerInputComponen
 //////////////////////////////////////// 공격 당함 ////////////////////////////////////////
 void ABossEnemy::BossTakeDamaged( int32 damage )
 {
-	BossHP -= damage;
-
-	if (BossHP <= 0)
-	{
-		bIsDie = true;
-
-		BossHP = 0;
-	}
+	bossFSM->TakeDamage( damage );
 
 	bossHPWidget->SetBosstHP( BossHP , BossMaxHP );
 }
 
+////////////////////////////////// 보스 체력바 빌보드 처리 //////////////////////////////////
 void ABossEnemy::MakeBilboard()
 {
 	//카메라의 location과 UI의 location을 가져오고
@@ -97,4 +92,3 @@ void ABossEnemy::MakeBilboard()
 	//UI의 rotation을 set
 	bossHealthUI->SetWorldRotation( bilboardRotate );
 }
-

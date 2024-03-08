@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Tiva/TivaCharacter.h"
 #include "BossEnemy.generated.h"
 
 UCLASS()
@@ -65,4 +66,9 @@ public:
 
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	bool bIsDie = false;
+
+
+	//////////////////////////////////////// 플레이어 대미지 처리 ////////////////////////////////////////
+	UPROPERTY(EditAnywhere)
+	class ATivaCharacter* player;
 };

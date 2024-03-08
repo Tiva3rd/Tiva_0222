@@ -42,7 +42,13 @@ public:
 	bool bIsAttack = false;
 
 	UFUNCTION()
+	void AnimNotify_BossAttack();
+
+	UFUNCTION()
 	void AnimNotify_AttackEnd();
+
+	UFUNCTION()
+	void AnimNotify_BossDamageEnd();
 
 	UPROPERTY( EditAnywhere , BlueprintReadOnly )
 	class ABossEnemy* bIsDie;

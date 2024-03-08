@@ -147,6 +147,30 @@ void UBossFSM::TickAttack()
 		SetState( EBoss_Enemy::DEAD );
 }
 
+void UBossFSM::TakeDamage( int32 damage )
+{
+	me->BossHP -= damage;
+
+	if (me->BossHP <= 0)
+	{
+		me->bIsDie = true;
+
+		me->BossHP = 0;
+	}
+
+	if (me->BossHP > 0)
+	{
+		me->PlayAnimMontage( bossMontage , 1 );
+		me->GetCharacterMovement()->SetMovementMode( MOVE_None );
+	}
+}
+
+void UBossFSM::DoDamageEnd()
+{
+	SetState( EBoss_Enemy::MOVE );
+	me->GetCharacterMovement()->SetMovementMode( MOVE_Walking );
+}
+
 
 //////////////////////////////////////// DEAD ////////////////////////////////////////
 void UBossFSM::TickDead()

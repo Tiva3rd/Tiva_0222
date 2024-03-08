@@ -13,6 +13,7 @@ enum class EBoss_Enemy : uint8
 	IDLE			 UMETA( DisplayName = "IDLE" ) ,
 	MOVE			 UMETA( DisplayName = "MOVE" ) ,
 	ATTACK			 UMETA( DisplayName = "ATTACK" ) ,
+	DAMAGED			 UMETA( DisplayName = "DAMAGED" ) ,
 	DEAD			 UMETA( DisplayName = "DEAD" )
 };
 
@@ -72,10 +73,15 @@ public:
 	void TickIdle();
 	void TickMove();
 	void TickAttack();
+	void TakeDamage( int32 damage );
+	void DoDamageEnd();
 	void TickDead();
 
 	float curTime;
 	float attackDelayTime = 3.5f;
+
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* bossMontage;
 
 	void SetState( EBoss_Enemy next );
 
