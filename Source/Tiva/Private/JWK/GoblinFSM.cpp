@@ -5,6 +5,7 @@
 
 #include "AIController.h"
 #include "NavigationSystem.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/GoblinAnim.h"
 #include "JWK/GoblinEnemy.h"
@@ -138,6 +139,7 @@ void UGoblinFSM::TickAttack()
 void UGoblinFSM::TickDead()
 {
 	me->GetCharacterMovement()->SetMovementMode(MOVE_None);
+	me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void UGoblinFSM::SetState( EGoblin_Enemy next )

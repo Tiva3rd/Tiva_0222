@@ -53,6 +53,9 @@ public:
 	UFUNCTION()
 	void AnimNotify_AttackEnd();
 
+	UFUNCTION()
+	void AnimNotify_GoblinHit();
+
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class UParticleSystemComponent* fire;
 

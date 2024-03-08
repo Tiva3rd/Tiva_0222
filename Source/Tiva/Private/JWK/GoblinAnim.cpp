@@ -47,3 +47,7 @@ void UGoblinAnim::AnimNotify_AttackEnd()
 {
 	bIsAttack = false;
 }
+
+void UGoblinAnim::AnimNotify_GoblinHit()
+{
+}
