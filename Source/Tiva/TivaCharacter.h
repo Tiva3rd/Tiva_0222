@@ -86,5 +86,8 @@ public:
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	float maxPlayerHP = 50.0f;
 
+	UFUNCTION( BlueprintCallable )
+	void PlayerTakeDamaged( int32 damage );
+
 };
 

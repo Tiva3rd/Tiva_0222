@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+ï»¿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TivaCharacter.h"
 #include "Engine/LocalPlayer.h"
@@ -128,8 +128,18 @@ void ATivaCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		
 
-		//È­»ìµé°í È­¸é È¸ÀüÇÒ¶§ Àß ¿òÁ÷ÀÌ°Ô ÇÏ±â À§ÇÑ °è»ê//
+		//í™”ì‚´ë“¤ê³  í™”ë©´ íšŒì „í• ë•Œ ì˜ ì›€ì§ì´ê²Œ í•˜ê¸° ìœ„í•œ ê³„ì‚°//
 		AddControllerYawInput(LookAxisVector.X * UKismetMathLibrary::SelectFloat(0.2f,1.0f,Aim));
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ATivaCharacter::PlayerTakeDamaged( int32 damage )
+{
+	playerHP -= float(damage);
+
+	if (playerHP <= 0)
+	{
+		playerHP = 0;
 	}
 }
