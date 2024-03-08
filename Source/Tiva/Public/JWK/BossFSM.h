@@ -75,7 +75,7 @@ public:
 	void TickDead();
 
 	float curTime;
-	float attackDelayTime = 2.0f;
+	float attackDelayTime = 3.5f;
 
 	void SetState( EBoss_Enemy next );
 
