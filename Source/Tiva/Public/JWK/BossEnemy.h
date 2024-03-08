@@ -55,7 +55,7 @@ public:
 
 
 	UPROPERTY( EditAnywhere )
-	int32 BossMaxHP = 10;
+	int32 BossMaxHP = 12;
 
 	UPROPERTY( EditAnywhere )
 	int32 BossHP = BossMaxHP;

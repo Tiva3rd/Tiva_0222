@@ -4,6 +4,7 @@
 #include "JWK/BossEnemy.h"
 
 #include "Blueprint/UserWidget.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/BossFSM.h"
@@ -16,6 +17,9 @@ ABossEnemy::ABossEnemy()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	//UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
+	//MyCapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// BossHPUI 생성
 	bossHealthUI = CreateDefaultSubobject<UWidgetComponent>( TEXT( "bossHealthUI" ) );

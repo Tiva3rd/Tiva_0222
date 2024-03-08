@@ -7,6 +7,7 @@
 #include "AITypes.h"
 #include "BlueprintEditor.h"
 #include "NavigationSystem.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/BossAnim.h"
 #include "JWK/BossEnemy.h"
@@ -150,6 +151,7 @@ void UBossFSM::TickAttack()
 void UBossFSM::TickDead()
 {
 	me->GetCharacterMovement()->SetMovementMode( MOVE_None );
+
 }
 
 void UBossFSM::SetState( EBoss_Enemy next )
