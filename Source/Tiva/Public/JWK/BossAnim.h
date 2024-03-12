@@ -52,4 +52,7 @@ public:
 
 	UPROPERTY( EditAnywhere , BlueprintReadOnly )
 	class ABossEnemy* bIsDie;
+
+	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	class ABossEnemy* Dealdamage;
 };

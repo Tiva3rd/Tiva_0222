@@ -22,17 +22,21 @@ protected:
 
 public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick( float DeltaTime ) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
 
 
 	//////////////////////////////////////// 컴포넌트 ////////////////////////////////////////
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY( EditAnywhere , BlueprintReadOnly )
 	class UStaticMeshComponent* swordComp;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	class USphereComponent* attackSphereComp;
+
+
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class UBossFSM* bossFSM;
 
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
@@ -48,7 +52,7 @@ public:
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class UWidgetComponent* bossHealthUI;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class UBossHPWidget* bossHPWidget;
 
 	UFUNCTION()
@@ -69,6 +73,11 @@ public:
 
 
 	//////////////////////////////////////// 플레이어 대미지 처리 ////////////////////////////////////////
-	UPROPERTY(EditAnywhere)
+	UPROPERTY( EditAnywhere )
 	class ATivaCharacter* player;
+
+	//UFUNCTION()
+	//void DealDamage();
+
+
 };
