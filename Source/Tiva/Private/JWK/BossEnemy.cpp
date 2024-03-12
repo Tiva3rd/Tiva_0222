@@ -5,6 +5,7 @@
 
 #include "Blueprint/UserWidget.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/BossFSM.h"
@@ -31,6 +32,10 @@ ABossEnemy::ABossEnemy()
 
 	swordComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "swordComp" ) );
 	swordComp->SetupAttachment( GetMesh() , TEXT( "hand_rSocket" ) );
+
+	attackSphereComp = CreateDefaultSubobject<USphereComponent>( TEXT( "attackSphereComp" ) );
+	attackSphereComp->SetupAttachment( swordComp );
+	attackSphereComp->SetWorldScale3D( FVector( 5.0f ) );
 
 	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>( TEXT( "movementComp" ) );
 
@@ -92,3 +97,18 @@ void ABossEnemy::MakeBilboard()
 	//UI의 rotation을 set
 	bossHealthUI->SetWorldRotation( bilboardRotate );
 }
+
+//void ABossEnemy::DealDamage()
+//{
+//	TArray<TEnumAsByte<EObjectTypeQuery>> QueryArray;
+//	TArray<AActor*> IgnoreActors;
+//	TArray<AActor*> OutActors;
+//	UKismetSystemLibrary::SphereOverlapActors( GetWorld() , FVector(/*attackSphereComp->GetComponentLocation()*/) , 100 , QueryArray , APawn::StaticClass() , IgnoreActors , OutActors );
+//
+//	UKismetSystemLibrary::DrawDebugSphere( GetWorld() , attackSphereComp->GetComponentLocation() , 100 , 12 , FLinearColor::Red , 2 , 0 );
+//
+//	for (int i = 0; i < OutActors.Num(); i++)
+//	{
+//		player->PlayerTakeDamaged(5);
+//	}
+//}

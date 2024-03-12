@@ -66,7 +66,7 @@ public:
 	UPROPERTY( EditAnywhere )
 	float attackDistance = 200;
 	UPROPERTY( EditAnywhere )
-	float chasePlayerReach = 800;
+	float chasePlayerReach = 600;
 
 
 	// Boss Enemy State Function

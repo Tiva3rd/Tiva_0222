@@ -35,13 +35,13 @@ public:
 
 	//////////////////////////////////////// Damaged ////////////////////////////////////////
 	UFUNCTION( BlueprintCallable )
-	void FoxTakeDamage( float damage );
+	void WolfTakeDamage( float damage );
 
 	UPROPERTY( EditAnywhere )
-	int32 FoxMaxHP = 3;
+	int32 WolfMaxHP = 3;
 
 	UPROPERTY( EditAnywhere )
-	int32 FoxHP = FoxMaxHP;
+	int32 WolfHP = WolfMaxHP;
 
 	UPROPERTY( EditAnywhere )
 	bool bIsAttacked = false;

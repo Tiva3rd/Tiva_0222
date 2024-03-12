@@ -29,7 +29,7 @@ void UBossAnim::NativeUpdateAnimation( float DeltaSeconds )
 
 void UBossAnim::AnimNotify_BossAttack()
 {
-	
+	//Dealdamage->DealDamage();
 }
 
 void UBossAnim::AnimNotify_AttackEnd()
