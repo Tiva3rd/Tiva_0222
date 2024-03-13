@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include <Kismet/KismetMathLibrary.h>
 #include "Animation/AnimMontage.h"
+#include "Net/UnrealNetwork.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -142,4 +143,13 @@ void ATivaCharacter::PlayerTakeDamaged( int32 damage )
 	{
 		playerHP = 0;
 	}
+}
+
+void ATivaCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME( ATivaCharacter , Aim );
+	DOREPLIFETIME( ATivaCharacter , Aimable );
+	DOREPLIFETIME( ATivaCharacter , BowOnHand );
+	DOREPLIFETIME( ATivaCharacter , Pull );
 }
