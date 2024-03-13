@@ -30,7 +30,7 @@ void UWolfFSM::BeginPlay()
 	ai = Cast<AAIController>( me->GetController() );
 	wolfAnim = Cast<UWolfAnim>( me->GetMesh()->GetAnimInstance() );
 
-	playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
+
 }
 
 
@@ -50,7 +50,9 @@ void UWolfFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComp
 
 void UWolfFSM::TickIdle()
 {
-	if (distanceToPlayer <= chasePlayerReach)
+	playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
+	float distPlayer = playerTarget->GetDistanceTo( me );
+	if (distPlayer <= chasePlayerReach)
 		SetState( EWolf::MOVE );
 
 
@@ -83,8 +85,6 @@ void UWolfFSM::TickMove()
 				wolfAnim->bIsAttack = true;
 			}
 		}
-		else
-			SetState( EWolf::IDLE );
 	}
 
 	else if (r.Result == ENavigationQueryResult::Fail)

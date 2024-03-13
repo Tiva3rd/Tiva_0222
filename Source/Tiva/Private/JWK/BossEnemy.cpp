@@ -35,7 +35,7 @@ ABossEnemy::ABossEnemy()
 
 	attackSphereComp = CreateDefaultSubobject<USphereComponent>( TEXT( "attackSphereComp" ) );
 	attackSphereComp->SetupAttachment( swordComp );
-	attackSphereComp->SetWorldScale3D( FVector( 5.0f ) );
+	attackSphereComp->SetWorldScale3D( FVector( 8.0f ) );
 
 	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>( TEXT( "movementComp" ) );
 

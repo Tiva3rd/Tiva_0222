@@ -51,7 +51,7 @@ public:
 	UPROPERTY( EditAnywhere )
 	float attackDistance = 200;
 	UPROPERTY( EditAnywhere )
-	float chasePlayerReach = 1000;
+	float chasePlayerReach = 1500;
 
 	UPROPERTY()
 	FVector destinationToPlayer;
@@ -65,7 +65,7 @@ public:
 	void TickDead();
 
 	float curTime;
-	float attackDelayTime = 3.5f;
+	float attackDelayTime = 1.5f;
 
 	UPROPERTY( EditAnywhere )
 	class UAnimMontage* wolfMontage;
