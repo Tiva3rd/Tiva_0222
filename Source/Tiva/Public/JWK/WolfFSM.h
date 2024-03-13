@@ -33,8 +33,8 @@ public:
 	// Called every frame
 	virtual void TickComponent( float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction ) override;
 
-	UPROPERTY()
-	class AActor* playerTarget;
+	//UPROPERTY()
+	//class AActor* playerTarget;
 
 	UPROPERTY( EditAnywhere )
 	class AWolf* me;
