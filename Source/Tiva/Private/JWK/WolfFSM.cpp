@@ -10,6 +10,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/Wolf.h"
 #include "JWK/WolfAnim.h"
+#include "Tiva/TivaCharacter.h"
+
 
 // Sets default values for this component's properties
 UWolfFSM::UWolfFSM()
@@ -30,7 +32,7 @@ void UWolfFSM::BeginPlay()
 	ai = Cast<AAIController>( me->GetController() );
 	wolfAnim = Cast<UWolfAnim>( me->GetMesh()->GetAnimInstance() );
 
-
+	
 }
 
 
@@ -50,20 +52,15 @@ void UWolfFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComp
 
 void UWolfFSM::TickIdle()
 {
-	playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
-	float distPlayer = playerTarget->GetDistanceTo( me );
-	if (distPlayer <= chasePlayerReach)
-		SetState( EWolf::MOVE );
-
-
-	if (me->bIsDie == true)
-		SetState( EWolf::DEAD );
+	me->OnRep_FindPlayer();/*playerTarget->GetDistanceTo( me );*/
+	//playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
+	
 }
 
 void UWolfFSM::TickMove()
 {
-	destinationToPlayer = playerTarget->GetActorLocation();
-	distanceToPlayer = playerTarget->GetDistanceTo( me );
+	destinationToPlayer = me->playerTarget->GetActorLocation();
+	distanceToPlayer = me->playerTarget->GetDistanceTo( me );
 
 	auto ns = UNavigationSystemV1::GetNavigationSystem( GetWorld() );
 	FAIMoveRequest req;
@@ -101,7 +98,7 @@ void UWolfFSM::TickAttack()
 	if (curTime > attackDelayTime)
 	{
 		curTime = 0;
-		float distance = playerTarget->GetDistanceTo( me );
+		float distance = me->playerTarget->GetDistanceTo( me );
 		if (distance > attackDistance)
 			SetState( EWolf::MOVE );
 		else
@@ -137,4 +134,3 @@ void UWolfFSM::SetState( EWolf next )
 	state = next;
 	curTime = 0;
 }
-

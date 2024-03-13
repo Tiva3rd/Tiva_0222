@@ -40,17 +40,26 @@ public:
 	UPROPERTY( EditAnywhere )
 	int32 WolfMaxHP = 3;
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY( Replicated , EditAnywhere )
 	int32 WolfHP = WolfMaxHP;
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY( Replicated , EditAnywhere )
 	bool bIsAttacked = false;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY( Replicated , EditAnywhere , BlueprintReadWrite )
 	bool bIsDie = false;
 
 
 	//////////////////////////////////////// 플레이어 대미지 처리 ////////////////////////////////////////
 	UPROPERTY( EditAnywhere )
 	class ATivaCharacter* player;
+
+	////////////////////////////////////////////// NetWork //////////////////////////////////////////////
+	UFUNCTION()
+	void OnRep_FindPlayer();
+
+	UPROPERTY( ReplicatedUsing = OnRep_FindPlayer , EditAnywhere )
+	class AActor* playerTarget;
+
+	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
 };
