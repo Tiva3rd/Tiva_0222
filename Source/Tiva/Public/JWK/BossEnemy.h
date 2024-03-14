@@ -62,22 +62,26 @@ public:
 	UPROPERTY( EditAnywhere )
 	int32 BossMaxHP = 12;
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY( Replicated , EditAnywhere )
 	int32 BossHP = BossMaxHP;
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY( Replicated , EditAnywhere )
 	bool bIsAttacked = false;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY( Replicated , EditAnywhere )
 	bool bIsDie = false;
 
-
+	UPROPERTY( EditAnywhere )
+	class UAnimMontage* bossMontage;
 	//////////////////////////////////////// 플레이어 대미지 처리 ////////////////////////////////////////
 	UPROPERTY( EditAnywhere )
 	class ATivaCharacter* player;
+	////////////////////////////////////////////// NetWork //////////////////////////////////////////////
+	UFUNCTION()
+	void OnRep_FindPlayer();
 
-	//UFUNCTION()
-	//void DealDamage();
+	UPROPERTY( ReplicatedUsing = OnRep_FindPlayer , EditAnywhere )
+	class AActor* playerTarget;
 
-
+	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
 };

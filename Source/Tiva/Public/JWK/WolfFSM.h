@@ -55,20 +55,20 @@ public:
 
 	UPROPERTY()
 	FVector destinationToPlayer;
+	UPROPERTY()
 	float distanceToPlayer;
 
 	void TickIdle();
 	void TickMove();
 	void TickAttack();
-	void TakeDamage( int32 damage );
 	void DoDamageEnd();
 	void TickDead();
 
 	float curTime;
 	float attackDelayTime = 1.5f;
 
-	UPROPERTY( EditAnywhere )
-	class UAnimMontage* wolfMontage;
+	//UPROPERTY( EditAnywhere )
+	//class UAnimMontage* wolfMontage;
 
 	void SetState( EWolf next );
 

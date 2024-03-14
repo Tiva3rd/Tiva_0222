@@ -10,6 +10,7 @@
 #include "JWK/GoblinAnim.h"
 #include "JWK/GoblinEnemy.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 #include "OJS/houseTargetColumn.h"
 
 // Sets default values for this component's properties
@@ -19,7 +20,6 @@ UGoblinFSM::UGoblinFSM()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -63,20 +63,25 @@ void UGoblinFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorCo
 	}
 }
 
+
+//////////////////////////////////////// IDLE ////////////////////////////////////////
 void UGoblinFSM::TickIdle()
 {
-	playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
+	me->OnRep_FindPlayer();
+
 	if (mainTarget)
 		SetState( EGoblin_Enemy::MOVE );
 }
 
+
+//////////////////////////////////////// MOVE ////////////////////////////////////////
 void UGoblinFSM::TickMove()
 {
 	FVector destinationToHome = mainTarget->GetActorLocation();
 	float distanceToHome = mainTarget->GetDistanceTo( me );
 
-	FVector destinationToPlayer = playerTarget->GetActorLocation();
-	float distanceToPlayer = playerTarget->GetDistanceTo( me );
+	FVector destinationToPlayer = me->playerTarget->GetActorLocation();
+	float distanceToPlayer = me->playerTarget->GetDistanceTo( me );
 
 
 	auto ns = UNavigationSystemV1::GetNavigationSystem( GetWorld() );
@@ -115,6 +120,8 @@ void UGoblinFSM::TickMove()
 		SetState( EGoblin_Enemy::DEAD );
 }
 
+
+//////////////////////////////////////// ATTACK ////////////////////////////////////////
 void UGoblinFSM::TickAttack()
 {
 	curTime += GetWorld()->GetDeltaSeconds();
@@ -138,14 +145,24 @@ void UGoblinFSM::TickAttack()
 //////////////////////////////////////// DEAD ////////////////////////////////////////
 void UGoblinFSM::TickDead()
 {
-	me->GetCharacterMovement()->SetMovementMode(MOVE_None);
-	me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	me->GetCharacterMovement()->SetMovementMode( MOVE_None );
+	me->GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
 }
 
 void UGoblinFSM::SetState( EGoblin_Enemy next )
 {
-	state = next;
+	if (me->HasAuthority())
+	{
+		state = next;
+	}
 	curTime = 0;
+}
+
+void UGoblinFSM::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+{
+	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+
+	DOREPLIFETIME( UGoblinFSM , state );
 }
 
 

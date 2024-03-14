@@ -52,9 +52,11 @@ void AWolf::WolfTakeDamage( float damage )
 	WolfHP -= damage;
 	if (WolfHP <= 0)
 	{
+		WolfHP = 0;
+
 		bIsDie = true;
 
-		GetCharacterMovement()->DisableMovement();
+		//GetCharacterMovement()->DisableMovement();
 	}
 }
 

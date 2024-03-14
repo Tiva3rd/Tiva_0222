@@ -5,7 +5,6 @@
 
 #include "AIController.h"
 #include "AITypes.h"
-#include "BlueprintEditor.h"
 #include "NavigationSystem.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
@@ -13,6 +12,7 @@
 #include "JWK/BossAnim.h"
 #include "JWK/BossEnemy.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 #include "OJS/houseTargetColumn.h"
 
 // Sets default values for this component's properties
@@ -22,7 +22,6 @@ UBossFSM::UBossFSM()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -70,7 +69,8 @@ void UBossFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComp
 //////////////////////////////////////// IDLE ////////////////////////////////////////
 void UBossFSM::TickIdle()
 {
-	playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
+	me->OnRep_PlayerState();
+
 	if (mainTarget)
 		SetState( EBoss_Enemy::MOVE );
 }
@@ -85,8 +85,8 @@ void UBossFSM::TickMove()
 	FVector destinationToHome = mainTarget->GetActorLocation();
 	float distanceToHome = mainTarget->GetDistanceTo( me );
 
-	FVector destinationToPlayer = playerTarget->GetActorLocation();
-	float distanceToPlayer = playerTarget->GetDistanceTo( me );
+	FVector destinationToPlayer = me->playerTarget->GetActorLocation();
+	float distanceToPlayer = me->playerTarget->GetDistanceTo( me );
 
 
 	auto ns = UNavigationSystemV1::GetNavigationSystem( GetWorld() );
@@ -146,23 +146,7 @@ void UBossFSM::TickAttack()
 		SetState( EBoss_Enemy::DEAD );
 }
 
-void UBossFSM::TakeDamage( int32 damage )
-{
-	me->BossHP -= damage;
 
-	if (me->BossHP <= 0)
-	{
-		me->bIsDie = true;
-
-		me->BossHP = 0;
-	}
-
-	if (me->BossHP > 0)
-	{
-		me->PlayAnimMontage( bossMontage , 1 );
-		me->GetCharacterMovement()->SetMovementMode( MOVE_None );
-	}
-}
 
 void UBossFSM::DoDamageEnd()
 {
@@ -180,7 +164,17 @@ void UBossFSM::TickDead()
 
 void UBossFSM::SetState( EBoss_Enemy next )
 {
-	state = next;
+	if (me->HasAuthority())
+	{
+		state = next;
+	}
 	curTime = 0;
+}
+
+void UBossFSM::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+{
+	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+
+	DOREPLIFETIME( UBossFSM , state );
 }
 

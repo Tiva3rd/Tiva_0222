@@ -42,8 +42,8 @@ public:
 	UPROPERTY( EditAnywhere , BlueprintReadOnly )
 	class AhouseTargetColumn* mainTarget;
 
-	UPROPERTY()
-	class AActor* playerTarget;
+	//UPROPERTY()
+	//class AActor* playerTarget;
 
 	UPROPERTY( EditAnywhere )
 	class ABossEnemy* me;
@@ -73,22 +73,16 @@ public:
 	void TickIdle();
 	void TickMove();
 	void TickAttack();
-	void TakeDamage( int32 damage );
 	void DoDamageEnd();
 	void TickDead();
 
 	float curTime;
 	float attackDelayTime = 3.5f;
 
-	UPROPERTY(EditAnywhere)
-	class UAnimMontage* bossMontage;
+	//UPROPERTY(EditAnywhere)
+	//class UAnimMontage* bossMontage;
 
 	void SetState( EBoss_Enemy next );
 
-
-
-	
-
-
-
+	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
 };

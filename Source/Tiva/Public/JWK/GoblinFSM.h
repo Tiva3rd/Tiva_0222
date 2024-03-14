@@ -37,8 +37,8 @@ public:
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class AhouseTargetColumn* mainTarget;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
-	class AActor* playerTarget;
+	//UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	//class AActor* playerTarget;
 
 	UPROPERTY( EditAnywhere )
 	class AGoblinEnemy* me;
@@ -74,4 +74,6 @@ public:
 	float attackDelayTime = 3.5f;
 
 	void SetState( EGoblin_Enemy next );
+
+	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
 };

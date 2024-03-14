@@ -9,6 +9,8 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/BossFSM.h"
+#include "EngineUtils.h"
+#include "Net/UnrealNetwork.h"
 #include "JWK/BossHPWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -48,12 +50,16 @@ ABossEnemy::ABossEnemy()
 		swordComp->SetWorldScale3D( FVector( 0.25f ) );
 	}
 
+	bReplicates = true;
+	SetReplicateMovement( true );
 }
 
 // Called when the game starts or when spawned
 void ABossEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	NetUpdateFrequency = 100;
 
 	bossHPWidget = Cast<UBossHPWidget>( bossHealthUI->GetWidget() );
 }
@@ -64,6 +70,7 @@ void ABossEnemy::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 
 	MakeBilboard();
+	OnRep_FindPlayer();
 }
 
 // Called to bind functionality to input
@@ -77,7 +84,20 @@ void ABossEnemy::SetupPlayerInputComponent( UInputComponent* PlayerInputComponen
 //////////////////////////////////////// 공격 당함 ////////////////////////////////////////
 void ABossEnemy::BossTakeDamaged( int32 damage )
 {
-	bossFSM->TakeDamage( damage );
+	BossHP -= damage;
+
+	if (BossHP <= 0)
+	{
+		bIsDie = true;
+
+		BossHP = 0;
+	}
+
+	if (BossHP > 0)
+	{
+		PlayAnimMontage( bossMontage , 1 );
+		//GetCharacterMovement()->SetMovementMode( MOVE_None );
+	}
 
 	bossHPWidget->SetBosstHP( BossHP , BossMaxHP );
 }
@@ -96,6 +116,45 @@ void ABossEnemy::MakeBilboard()
 	FRotator bilboardRotate = UKismetMathLibrary::MakeRotFromX( tmp );
 	//UI의 rotation을 set
 	bossHealthUI->SetWorldRotation( bilboardRotate );
+}
+
+void ABossEnemy::OnRep_FindPlayer()
+{
+	// 레벨에 있는 ATivaCharacter 객체들을 다 검사해서 chasePlayerReach안에 있고
+	// 그중에서도 가장 까가운녀석을 내 playerTarget으로 지정
+	if (HasAuthority())
+	{
+		playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
+		float tempDist = bossFSM->chasePlayerReach;
+
+
+		for (TActorIterator<ATivaCharacter> IT( GetWorld() ); IT; ++IT)
+		{
+			ATivaCharacter* newPlayerCharacter = *IT;
+
+			// 플레이어와 나의 거리를 측정해서
+			float temp = newPlayerCharacter->GetDistanceTo( this );
+
+			// 만약 temp가 tempDist보다 가깝다면
+			if (temp <= tempDist)
+			{
+				// NewPlayer로 기억하고싶다.
+				playerTarget = newPlayerCharacter;
+
+				// tempDist = temp;
+				tempDist = temp;
+			}
+		}
+	}
+}
+
+void ABossEnemy::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+{
+	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+
+	DOREPLIFETIME( ABossEnemy , BossHP );
+	DOREPLIFETIME( ABossEnemy , bIsDie );
+	DOREPLIFETIME( ABossEnemy , playerTarget );
 }
 
 //void ABossEnemy::DealDamage()

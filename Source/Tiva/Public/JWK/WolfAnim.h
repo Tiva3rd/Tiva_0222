@@ -43,6 +43,6 @@ public:
 	UFUNCTION()
 	void AnimNotify_WolfAttackEnd();
 
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
-	class AWolf* bIsDie;
+	//UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	//class AWolf* bIsDie;
 };
