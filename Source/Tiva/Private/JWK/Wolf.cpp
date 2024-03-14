@@ -21,7 +21,7 @@ AWolf::AWolf()
 
 	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>( TEXT( "movementComp" ) );
 	bReplicates = true;
-
+	SetReplicateMovement( true );
 }
 
 // Called when the game starts or when spawned
@@ -49,8 +49,15 @@ void AWolf::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
 
 void AWolf::WolfTakeDamage( float damage )
 {
-	wolfFSM->TakeDamage( damage );
+	WolfHP -= damage;
+	if (WolfHP <= 0)
+	{
+		bIsDie = true;
+
+		GetCharacterMovement()->DisableMovement();
+	}
 }
+
 
 void AWolf::OnRep_FindPlayer()
 {
@@ -58,37 +65,30 @@ void AWolf::OnRep_FindPlayer()
 	// 그중에서도 가장 까가운녀석을 내 playerTarget으로 지정
 	if (HasAuthority())
 	{
-		playerTarget = nullptr;
+		playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
 		float tempDist = wolfFSM->chasePlayerReach;
 
 
 		for (TActorIterator<ATivaCharacter> IT( GetWorld() ); IT; ++IT)
 		{
-			ATivaCharacter* PlayerCharacter = *IT;
+			ATivaCharacter* newPlayerCharacter = *IT;
 
 			// 플레이어와 나의 거리를 측정해서
-			float temp = PlayerCharacter->GetDistanceTo( this );
+			float temp = newPlayerCharacter->GetDistanceTo( this );
 
 			// 만약 temp가 tempDist보다 가깝다면
-			if (temp < tempDist)
+			if (temp <= tempDist)
 			{
 				// NewPlayer로 기억하고싶다.
-				playerTarget = PlayerCharacter;
+				playerTarget = newPlayerCharacter;
 
 				// tempDist = temp;
 				tempDist = temp;
 			}
 
-			if (playerTarget != PlayerCharacter)
-				playerTarget = PlayerCharacter;
+			//if (playerTarget != newPlayerCharacter)
+			//	playerTarget = newPlayerCharacter;
 		}
-
-		float distPlayer = playerTarget->GetDistanceTo( this );
-		if (distPlayer <= wolfFSM->chasePlayerReach)
-			wolfFSM->SetState( EWolf::MOVE );
-
-		if (bIsDie == true)
-			wolfFSM->SetState( EWolf::DEAD );
 	}
 }
 

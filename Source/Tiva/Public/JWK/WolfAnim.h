@@ -32,6 +32,8 @@ public:
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class AWolf* me;
 
+
+
 	UPROPERTY( EditAnywhere , BlueprintReadOnly )
 	bool bIsChasePlayer = false;
 

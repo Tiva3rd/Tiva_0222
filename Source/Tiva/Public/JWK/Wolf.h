@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "WolfFSM.h"
 #include "GameFramework/Character.h"
 #include "Wolf.generated.h"
 
@@ -42,6 +43,7 @@ public:
 
 	UPROPERTY( Replicated , EditAnywhere )
 	int32 WolfHP = WolfMaxHP;
+
 
 	UPROPERTY( Replicated , EditAnywhere )
 	bool bIsAttacked = false;

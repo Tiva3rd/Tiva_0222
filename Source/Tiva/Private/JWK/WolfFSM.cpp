@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/Wolf.h"
 #include "JWK/WolfAnim.h"
+#include "Net/UnrealNetwork.h"
 #include "Tiva/TivaCharacter.h"
 
 
@@ -32,7 +33,7 @@ void UWolfFSM::BeginPlay()
 	ai = Cast<AAIController>( me->GetController() );
 	wolfAnim = Cast<UWolfAnim>( me->GetMesh()->GetAnimInstance() );
 
-	
+
 }
 
 
@@ -54,7 +55,16 @@ void UWolfFSM::TickIdle()
 {
 	me->OnRep_FindPlayer();/*playerTarget->GetDistanceTo( me );*/
 	//playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
-	
+
+	float distPlayer = me->playerTarget->GetDistanceTo( me );
+
+	UE_LOG(LogTemp,Warning,TEXT("State : Idle"));
+
+	if (distPlayer <= chasePlayerReach)
+		SetState( EWolf::MOVE );
+
+	if (me->bIsDie == true)
+		SetState( EWolf::DEAD );
 }
 
 void UWolfFSM::TickMove()
@@ -74,6 +84,7 @@ void UWolfFSM::TickMove()
 	{
 		if (distanceToPlayer <= chasePlayerReach)
 		{
+			UE_LOG( LogTemp , Warning , TEXT( "State : Move" ) );
 			ai->MoveToLocation( destinationToPlayer , 100 );
 
 			if (distanceToPlayer <= attackDistance)
@@ -94,7 +105,7 @@ void UWolfFSM::TickMove()
 void UWolfFSM::TickAttack()
 {
 	curTime += GetWorld()->GetDeltaSeconds();
-
+	UE_LOG( LogTemp , Warning , TEXT( "State : Attack" ) );
 	if (curTime > attackDelayTime)
 	{
 		curTime = 0;
@@ -109,15 +120,6 @@ void UWolfFSM::TickAttack()
 		SetState( EWolf::DEAD );
 }
 
-void UWolfFSM::TakeDamage( int32 damage )
-{
-	me->WolfHP -= damage;
-	if (me->WolfHP <= 0)
-	{
-		me->bIsDie = true;
-		me->wolfFSM = 0;
-	}
-}
 
 void UWolfFSM::DoDamageEnd()
 {
@@ -125,12 +127,23 @@ void UWolfFSM::DoDamageEnd()
 
 void UWolfFSM::TickDead()
 {
+	UE_LOG( LogTemp , Warning , TEXT( "State : Dead" ) );
 	me->GetCharacterMovement()->SetMovementMode( MOVE_None );
 	me->GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
 }
 
 void UWolfFSM::SetState( EWolf next )
 {
-	state = next;
+	if (me->HasAuthority())
+	{
+		state = next;
+	}
 	curTime = 0;
+}
+
+void UWolfFSM::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+{
+	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+
+	DOREPLIFETIME( UWolfFSM , state );
 }

@@ -42,7 +42,7 @@ public:
 	UPROPERTY( EditAnywhere )
 	class UWolfAnim* wolfAnim;
 
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	UPROPERTY(Replicated, EditAnywhere , BlueprintReadOnly )
 	EWolf state;
 
 	UPROPERTY()
@@ -71,4 +71,6 @@ public:
 	class UAnimMontage* wolfMontage;
 
 	void SetState( EWolf next );
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
