@@ -80,7 +80,7 @@ public:
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
 	bool Pull;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY( Replicated , EditAnywhere , BlueprintReadWrite )
 	float playerHP = 50.0f;
 
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )

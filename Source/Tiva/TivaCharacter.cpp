@@ -152,4 +152,5 @@ void ATivaCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME( ATivaCharacter , Aimable );
 	DOREPLIFETIME( ATivaCharacter , BowOnHand );
 	DOREPLIFETIME( ATivaCharacter , Pull );
+	DOREPLIFETIME( ATivaCharacter , playerHP );
 }
