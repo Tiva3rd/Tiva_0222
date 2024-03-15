@@ -21,7 +21,7 @@ public:
 	virtual void NativeUpdateAnimation( float DeltaSeconds ) override;
 
 	UPROPERTY( EditAnywhere , BlueprintReadOnly )
-	float speed ;
+	float speed = 1000;
 
 	UPROPERTY()
 	class UWolfFSM* wolfFSM;

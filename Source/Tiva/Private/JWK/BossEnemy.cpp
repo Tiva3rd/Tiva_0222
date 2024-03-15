@@ -96,6 +96,7 @@ void ABossEnemy::BossTakeDamaged( int32 damage )
 		BossHP = 0;
 
 		anim->PlayDeathAnimation();
+		GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
 	}
 
 	if (BossHP > 0)

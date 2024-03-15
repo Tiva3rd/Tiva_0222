@@ -4,6 +4,7 @@
 #include "JWK/Wolf.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "JWK/WolfFSM.h"
 #include "EngineUtils.h"
 #include "JWK/WolfAnim.h"
@@ -58,7 +59,7 @@ void AWolf::WolfTakeDamage( float damage )
 
 		auto anim = Cast<UWolfAnim>(GetMesh()->GetAnimInstance());
 		anim->PlayDeathAnimation();
-		//GetCharacterMovement()->DisableMovement();
+		GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
 	}
 }
 

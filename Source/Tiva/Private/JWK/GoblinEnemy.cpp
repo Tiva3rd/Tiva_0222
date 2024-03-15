@@ -3,6 +3,7 @@
 
 #include "JWK/GoblinEnemy.h"
 
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/GoblinFSM.h"
 #include "EngineUtils.h"
@@ -58,6 +59,7 @@ void AGoblinEnemy::GoblinTakeDamaged( int32 damage )
 
 		auto anim = Cast<UGoblinAnim>( GetMesh()->GetAnimInstance() );
 		anim->PlayDeathAnimation();
+		GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
 	}
 }
 
