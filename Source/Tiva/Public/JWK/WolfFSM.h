@@ -29,6 +29,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+
 public:
 	// Called every frame
 	virtual void TickComponent( float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction ) override;
@@ -42,12 +43,13 @@ public:
 	UPROPERTY( EditAnywhere )
 	class UWolfAnim* wolfAnim;
 
-	UPROPERTY(Replicated, EditAnywhere , BlueprintReadOnly )
+	UPROPERTY( Replicated , EditAnywhere , BlueprintReadOnly )
 	EWolf state;
 
 	UPROPERTY()
 	class AAIController* ai;
 
+	// Wolf Attack Range
 	UPROPERTY( EditAnywhere )
 	float attackDistance = 200;
 	UPROPERTY( EditAnywhere )
@@ -67,10 +69,13 @@ public:
 	float curTime;
 	float attackDelayTime = 1.5f;
 
-	//UPROPERTY( EditAnywhere )
-	//class UAnimMontage* wolfMontage;
-
 	void SetState( EWolf next );
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	UFUNCTION( Server , Reliable )
+	void ServerSetState( EWolf nextState );
+
+	UFUNCTION( NetMulticast , Reliable )
+	void MultiSetState( EWolf nextState );
+
+	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
 };

@@ -33,12 +33,17 @@ void AWolf::BeginPlay()
 	NetUpdateFrequency = 100;
 }
 
+void AWolf::PossessedBy( AController* NewController )
+{
+	Super::PossessedBy( NewController );
+
+	UE_LOG( LogTemp , Warning , TEXT( "AWolf::PossessedBy" ) );
+}
+
 // Called every frame
 void AWolf::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-
-	OnRep_FindPlayer();
 }
 
 // Called to bind functionality to input
@@ -57,20 +62,23 @@ void AWolf::WolfTakeDamage( float damage )
 
 		bIsDie = true;
 
-		auto anim = Cast<UWolfAnim>(GetMesh()->GetAnimInstance());
+		auto anim = Cast<UWolfAnim>( GetMesh()->GetAnimInstance() );
 		anim->PlayDeathAnimation();
 		GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
 	}
 }
 
 
-void AWolf::OnRep_FindPlayer()
+void AWolf::FindPlayer()
 {
+	if (playerTarget)
+		return;
 	// 레벨에 있는 ATivaCharacter 객체들을 다 검사해서 chasePlayerReach안에 있고
 	// 그중에서도 가장 까가운녀석을 내 playerTarget으로 지정
-	if (HasAuthority())
+	auto pc = GetWorld()->GetFirstPlayerController();
+	if (pc->HasAuthority())
 	{
-		playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
+		playerTarget = nullptr;
 		float tempDist = wolfFSM->chasePlayerReach;
 
 
@@ -90,9 +98,6 @@ void AWolf::OnRep_FindPlayer()
 				// tempDist = temp;
 				tempDist = temp;
 			}
-
-			//if (playerTarget != newPlayerCharacter)
-			//	playerTarget = newPlayerCharacter;
 		}
 	}
 }

@@ -61,14 +61,22 @@ void UGoblinFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorCo
 	case EGoblin_Enemy::ATTACK:						TickAttack();			break;
 	case EGoblin_Enemy::DEAD:				        TickDead();				break;
 	}
+	me->FindPlayer();
+	//if (nullptr == me->playerTarget)
+	//{
+	//	me->FindPlayer();
+	//	return;
+	//}
+
+	// 죽음상태가 아닐 때 bIsDie 값이 들어오면
+	if (state != EGoblin_Enemy::DEAD && me->bIsDie == true)
+		SetState( EGoblin_Enemy::DEAD );
 }
 
 
 //////////////////////////////////////// IDLE ////////////////////////////////////////
 void UGoblinFSM::TickIdle()
 {
-	me->OnRep_FindPlayer();
-
 	if (mainTarget)
 		SetState( EGoblin_Enemy::MOVE );
 }
@@ -77,6 +85,11 @@ void UGoblinFSM::TickIdle()
 //////////////////////////////////////// MOVE ////////////////////////////////////////
 void UGoblinFSM::TickMove()
 {
+
+	// AI Controller 널 값이면 다시 AI Controller 찾아와!!
+	if (nullptr == ai)
+		return;
+
 	FVector destinationToHome = mainTarget->GetActorLocation();
 	float distanceToHome = mainTarget->GetDistanceTo( me );
 
@@ -97,7 +110,7 @@ void UGoblinFSM::TickMove()
 	if (r.Result == ENavigationQueryResult::Success)
 	{
 		ai->MoveToLocation( destinationToHome , 100 );
-		if (distanceToHome < attackDistance)
+		if (distanceToHome <= attackDistance)
 		{
 			SetState( EGoblin_Enemy::ATTACK );
 			goblinAnim->bIsAttack = true;
@@ -114,10 +127,9 @@ void UGoblinFSM::TickMove()
 		}
 	}
 	else if (r.Result == ENavigationQueryResult::Fail)
+	{
 		return;
-
-	if (me->bIsDie == true)
-		SetState( EGoblin_Enemy::DEAD );
+	}
 }
 
 
@@ -136,9 +148,6 @@ void UGoblinFSM::TickAttack()
 		else
 			goblinAnim->bIsAttack = true;
 	}
-
-	if (me->bIsDie == true)
-		SetState( EGoblin_Enemy::DEAD );
 }
 
 
@@ -151,10 +160,17 @@ void UGoblinFSM::TickDead()
 
 void UGoblinFSM::SetState( EGoblin_Enemy next )
 {
-	if (me->HasAuthority())
-	{
-		state = next;
-	}
+	ServerSetState( next );
+}
+
+void UGoblinFSM::ServerSetState_Implementation( EGoblin_Enemy nextState )
+{
+	MultiCastSetStaet( nextState );
+}
+
+void UGoblinFSM::MultiCastSetStaet_Implementation( EGoblin_Enemy nextState )
+{
+	state = nextState;
 	curTime = 0;
 }
 

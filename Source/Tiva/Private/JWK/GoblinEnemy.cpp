@@ -37,7 +37,6 @@ void AGoblinEnemy::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	OnRep_FindPlayer();
 }
 
 // Called to bind functionality to input
@@ -63,11 +62,16 @@ void AGoblinEnemy::GoblinTakeDamaged( int32 damage )
 	}
 }
 
-void AGoblinEnemy::OnRep_FindPlayer()
+void AGoblinEnemy::FindPlayer()
 {
+	// GoblinFSM 에서 TickIdle에서 PlayerSearch를 호출
+	if (playerTarget)
+		return;
+
 	// 레벨에 있는 ATivaCharacter 객체들을 다 검사해서 chasePlayerReach안에 있고
 	// 그중에서도 가장 까가운녀석을 내 playerTarget으로 지정
-	if (HasAuthority())
+	auto pc = GetWorld()->GetFirstPlayerController();
+	if (pc->HasAuthority())
 	{
 		playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
 		float tempDist = goblinFSM->chasePlayerReach;

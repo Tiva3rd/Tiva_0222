@@ -20,6 +20,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual  void PossessedBy(AController* NewController) override;
+
 public:
 	// Called every frame
 	virtual void Tick( float DeltaTime ) override;
@@ -57,10 +59,9 @@ public:
 	class ATivaCharacter* player;
 
 	////////////////////////////////////////////// NetWork //////////////////////////////////////////////
-	UFUNCTION()
-	void OnRep_FindPlayer();
+	void FindPlayer();
 
-	UPROPERTY( ReplicatedUsing = OnRep_FindPlayer , EditAnywhere )
+	UPROPERTY( Replicated , EditAnywhere )
 	class AActor* playerTarget;
 
 	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;

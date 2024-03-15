@@ -30,6 +30,8 @@ void UWolfFSM::BeginPlay()
 
 	me = Cast<AWolf>( GetOwner() );
 	ai = Cast<AAIController>( me->GetController() );
+
+	UE_LOG( LogTemp , Warning , TEXT( "UWolfFSM::BeginPlay : %s" ) , *GetOwner()->GetActorNameOrLabel() );
 	wolfAnim = Cast<UWolfAnim>( me->GetMesh()->GetAnimInstance() );
 }
 
@@ -46,26 +48,41 @@ void UWolfFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComp
 	case EWolf::ATTACK:					 TickAttack();				 break;
 	case EWolf::DEAD:					 TickDead();				 break;
 	}
+
+
+	if (state != EWolf::DEAD && me->bIsDie == true)
+		SetState( EWolf::DEAD );
+
+	FString stateString = UEnum::GetValueAsString<EWolf>( state );
+	DrawDebugString( GetWorld() , me->GetActorLocation() , stateString , me , FColor::Yellow , 0 , true , 1.0f );
 }
 
 void UWolfFSM::TickIdle()
 {
-	me->OnRep_FindPlayer();/*playerTarget->GetDistanceTo( me );*/
+	me->FindPlayer();/*playerTarget->GetDistanceTo( me );*/
 	//playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
+	if (me->playerTarget)
+	{
+		float distPlayer = me->playerTarget->GetDistanceTo( me );
 
-	float distPlayer = me->playerTarget->GetDistanceTo( me );
+		UE_LOG( LogTemp , Warning , TEXT( "State : Idle" ) );
 
-	UE_LOG(LogTemp,Warning,TEXT("State : Idle"));
-
-	if (distPlayer <= chasePlayerReach)
-		SetState( EWolf::MOVE );
-
-	if (me->bIsDie == true)
-		SetState( EWolf::DEAD );
+		if (distPlayer <= chasePlayerReach)
+			SetState( EWolf::MOVE );
+	}
 }
 
 void UWolfFSM::TickMove()
 {
+	if (nullptr == me->playerTarget)
+	{
+		me->FindPlayer();
+		return;
+	}
+
+	if (nullptr == ai)
+		return;
+
 	destinationToPlayer = me->playerTarget->GetActorLocation();
 	distanceToPlayer = me->playerTarget->GetDistanceTo( me );
 
@@ -93,10 +110,10 @@ void UWolfFSM::TickMove()
 	}
 
 	else if (r.Result == ENavigationQueryResult::Fail)
+	{
 		return;
+	}
 
-	if (me->bIsDie == true)
-		SetState( EWolf::DEAD );
 }
 
 void UWolfFSM::TickAttack()
@@ -112,9 +129,6 @@ void UWolfFSM::TickAttack()
 		else
 			wolfAnim->bIsAttack = true;
 	}
-
-	if (me->bIsDie == true)
-		SetState( EWolf::DEAD );
 }
 
 
@@ -131,10 +145,17 @@ void UWolfFSM::TickDead()
 
 void UWolfFSM::SetState( EWolf next )
 {
-	if (me->HasAuthority())
-	{
-		state = next;
-	}
+	ServerSetState( next );
+}
+
+void UWolfFSM::ServerSetState_Implementation( EWolf nextState )
+{
+	MultiSetState( nextState );
+}
+
+void UWolfFSM::MultiSetState_Implementation( EWolf nextState )
+{
+	state = nextState;
 	curTime = 0;
 }
 

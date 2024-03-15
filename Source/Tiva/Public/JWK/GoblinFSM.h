@@ -15,12 +15,12 @@ enum class EGoblin_Enemy : uint8
 	DEAD			 UMETA( DisplayName = "DEAD" )
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup = (Custom) , meta = (BlueprintSpawnableComponent) )
 class TIVA_API UGoblinFSM : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UGoblinFSM();
 
@@ -28,17 +28,14 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent( float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction ) override;
 
 
 	// 목적지를 테스트 Pawn --> 배치되어있는 Pawn 클래스 FSM Detail 에서 수정
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class AhouseTargetColumn* mainTarget;
-
-	//UPROPERTY( EditAnywhere , BlueprintReadWrite )
-	//class AActor* playerTarget;
 
 	UPROPERTY( EditAnywhere )
 	class AGoblinEnemy* me;
@@ -47,14 +44,12 @@ public:
 	class UGoblinAnim* goblinAnim;
 
 	// Goblin Enemy의 State
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	UPROPERTY( Replicated , EditAnywhere , BlueprintReadOnly )
 	EGoblin_Enemy state;
 
 	// Goblin Enemy 의 AI
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY()
 	class AAIController* ai;
-
-
 
 
 	// Goblin Attack Range
@@ -74,6 +69,12 @@ public:
 	float attackDelayTime = 3.5f;
 
 	void SetState( EGoblin_Enemy next );
+
+	UFUNCTION( Server , Reliable )
+	void ServerSetState( EGoblin_Enemy nextState );
+
+	UFUNCTION( NetMulticast , Reliable )
+	void MultiCastSetStaet( EGoblin_Enemy nextState );
 
 	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
 };

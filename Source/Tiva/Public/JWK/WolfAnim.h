@@ -26,7 +26,7 @@ public:
 	UPROPERTY()
 	class UWolfFSM* wolfFSM;
 
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	EWolf state;
 
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )

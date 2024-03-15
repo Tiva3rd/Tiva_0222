@@ -22,8 +22,17 @@ void UWolfAnim::NativeInitializeAnimation()
 void UWolfAnim::NativeUpdateAnimation( float DeltaSeconds )
 {
 	Super::NativeUpdateAnimation( DeltaSeconds );
+
+	me = Cast<AWolf>( TryGetPawnOwner() );
+
+	if (nullptr != me)
+		wolfFSM = me->wolfFSM;
+
 	if (nullptr == wolfFSM)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("nullptr == wolfFSM"));
 		return;
+	}
 
 	state = wolfFSM->state;
 }
