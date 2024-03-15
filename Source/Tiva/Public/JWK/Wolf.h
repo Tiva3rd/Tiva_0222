@@ -39,7 +39,7 @@ public:
 	void WolfTakeDamage( float damage );
 
 	UPROPERTY( EditAnywhere )
-	int32 WolfMaxHP = 3;
+	int32 WolfMaxHP = 4;
 
 	UPROPERTY( Replicated , EditAnywhere )
 	int32 WolfHP = WolfMaxHP;
@@ -48,7 +48,7 @@ public:
 	UPROPERTY( Replicated , EditAnywhere )
 	bool bIsAttacked = false;
 
-	UPROPERTY( Replicated , EditAnywhere , BlueprintReadWrite )
+	UPROPERTY( Replicated , EditAnywhere  )
 	bool bIsDie = false;
 
 

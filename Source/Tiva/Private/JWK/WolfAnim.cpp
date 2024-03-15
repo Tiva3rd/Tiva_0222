@@ -4,6 +4,7 @@
 #include "JWK/WolfAnim.h"
 
 #include "JWK/Wolf.h"
+#include "Net/UnrealNetwork.h"
 
 void UWolfAnim::NativeInitializeAnimation()
 {
@@ -31,3 +32,9 @@ void UWolfAnim::AnimNotify_WolfAttackEnd()
 {
 	bIsAttack = false;
 }
+
+void UWolfAnim::PlayDeathAnimation()
+{
+	Montage_Play( WolfDeath );
+}
+

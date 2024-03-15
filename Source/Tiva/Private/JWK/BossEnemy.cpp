@@ -10,8 +10,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/BossFSM.h"
 #include "EngineUtils.h"
+#include "JWK/BossAnim.h"
 #include "Net/UnrealNetwork.h"
 #include "JWK/BossHPWidget.h"
+#include "JWK/WolfAnim.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Tiva/TivaCharacter.h"
@@ -85,17 +87,20 @@ void ABossEnemy::SetupPlayerInputComponent( UInputComponent* PlayerInputComponen
 void ABossEnemy::BossTakeDamaged( int32 damage )
 {
 	BossHP -= damage;
+	auto anim = Cast<UBossAnim>( GetMesh()->GetAnimInstance() );
 
 	if (BossHP <= 0)
 	{
 		bIsDie = true;
 
 		BossHP = 0;
+
+		anim->PlayDeathAnimation();
 	}
 
 	if (BossHP > 0)
 	{
-		PlayAnimMontage( bossMontage , 1 );
+		anim->PlayHitAnimation();
 		//GetCharacterMovement()->SetMovementMode( MOVE_None );
 	}
 

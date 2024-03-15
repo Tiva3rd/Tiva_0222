@@ -42,6 +42,16 @@ void UBossAnim::AnimNotify_BossDamageEnd()
 	bossFSM->DoDamageEnd();
 }
 
+void UBossAnim::PlayDeathAnimation()
+{
+	Montage_Play( BossDeath );
+}
+
+void UBossAnim::PlayHitAnimation()
+{
+	Montage_Play( BossHit );
+}
+
 //void UBossAnim::AnimNotify_DamageEnd()
 //{
 //}

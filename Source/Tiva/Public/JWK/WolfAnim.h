@@ -21,7 +21,7 @@ public:
 	virtual void NativeUpdateAnimation( float DeltaSeconds ) override;
 
 	UPROPERTY( EditAnywhere , BlueprintReadOnly )
-	float speed = 1000;
+	float speed ;
 
 	UPROPERTY()
 	class UWolfFSM* wolfFSM;
@@ -43,6 +43,10 @@ public:
 	UFUNCTION()
 	void AnimNotify_WolfAttackEnd();
 
+	UPROPERTY( EditAnywhere )
+	class UAnimMontage* WolfDeath;
+
+	void PlayDeathAnimation();
 	//UPROPERTY( EditAnywhere , BlueprintReadOnly )
 	//class AWolf* bIsDie;
 };

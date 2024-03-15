@@ -6,6 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/GoblinFSM.h"
 #include "EngineUtils.h"
+#include "JWK/GoblinAnim.h"
 #include "Net/UnrealNetwork.h"
 #include "Tiva/TivaCharacter.h"
 
@@ -54,6 +55,9 @@ void AGoblinEnemy::GoblinTakeDamaged( int32 damage )
 		GoblinHP = 0;
 
 		bIsDie = true;
+
+		auto anim = Cast<UGoblinAnim>( GetMesh()->GetAnimInstance() );
+		anim->PlayDeathAnimation();
 	}
 }
 

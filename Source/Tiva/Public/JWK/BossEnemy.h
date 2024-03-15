@@ -71,8 +71,6 @@ public:
 	UPROPERTY( Replicated , EditAnywhere )
 	bool bIsDie = false;
 
-	UPROPERTY( EditAnywhere )
-	class UAnimMontage* bossMontage;
 	//////////////////////////////////////// 플레이어 대미지 처리 ////////////////////////////////////////
 	UPROPERTY( EditAnywhere )
 	class ATivaCharacter* player;

@@ -51,3 +51,8 @@ void UGoblinAnim::AnimNotify_AttackEnd()
 void UGoblinAnim::AnimNotify_GoblinHit()
 {
 }
+
+void UGoblinAnim::PlayDeathAnimation()
+{
+	Montage_Play( GoblinDeath );
+}

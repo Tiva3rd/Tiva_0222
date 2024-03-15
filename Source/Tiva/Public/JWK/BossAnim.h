@@ -53,6 +53,15 @@ public:
 	UPROPERTY( EditAnywhere , BlueprintReadOnly )
 	class ABossEnemy* bIsDie;
 
+	UPROPERTY( EditAnywhere )
+	class UAnimMontage* BossDeath;
+
+	void PlayDeathAnimation();
+
+	UPROPERTY( EditAnywhere )
+	class UAnimMontage* BossHit;
+	void PlayHitAnimation();
+
 	UPROPERTY( EditAnywhere , BlueprintReadOnly )
 	class ABossEnemy* Dealdamage;
 };

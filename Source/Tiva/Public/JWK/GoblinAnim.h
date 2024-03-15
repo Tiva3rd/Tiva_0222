@@ -56,6 +56,11 @@ public:
 	UFUNCTION()
 	void AnimNotify_GoblinHit();
 
+	UPROPERTY( EditAnywhere )
+	class UAnimMontage* GoblinDeath;
+
+	void PlayDeathAnimation();
+
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	class UParticleSystemComponent* fire;
 

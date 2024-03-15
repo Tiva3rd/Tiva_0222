@@ -56,6 +56,8 @@ void AWolf::WolfTakeDamage( float damage )
 
 		bIsDie = true;
 
+		auto anim = Cast<UWolfAnim>(GetMesh()->GetAnimInstance());
+		anim->PlayDeathAnimation();
 		//GetCharacterMovement()->DisableMovement();
 	}
 }
