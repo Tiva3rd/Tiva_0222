@@ -61,7 +61,9 @@ void UGoblinFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorCo
 	case EGoblin_Enemy::ATTACK:						TickAttack();			break;
 	case EGoblin_Enemy::DEAD:				        TickDead();				break;
 	}
+
 	me->FindPlayer();
+
 	//if (nullptr == me->playerTarget)
 	//{
 	//	me->FindPlayer();
@@ -77,6 +79,7 @@ void UGoblinFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorCo
 //////////////////////////////////////// IDLE ////////////////////////////////////////
 void UGoblinFSM::TickIdle()
 {
+	// mainTarget 있으면 State = Move  ==> 일단 무조건 Move
 	if (mainTarget)
 		SetState( EGoblin_Enemy::MOVE );
 }
