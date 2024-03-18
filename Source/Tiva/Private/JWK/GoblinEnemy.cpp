@@ -65,8 +65,8 @@ void AGoblinEnemy::GoblinTakeDamaged( int32 damage )
 void AGoblinEnemy::FindPlayer()
 {
 	// GoblinFSM 에서 TickIdle에서 PlayerSearch를 호출
-	if (playerTarget)
-		return;
+	//if (playerTarget)
+	//	return;
 
 	// 레벨에 있는 ATivaCharacter 객체들을 다 검사해서 chasePlayerReach안에 있고
 	// 그중에서도 가장 까가운녀석을 내 playerTarget으로 지정
