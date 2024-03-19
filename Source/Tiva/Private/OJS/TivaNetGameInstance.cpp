@@ -12,6 +12,8 @@ void UTivaNetGameInstance::Init()
 	if(auto subsystem = IOnlineSubsystem::Get())
 	{
 		sessionInterface = subsystem->GetSessionInterface();
+
+		sessionInterface->OnCreateSessionCompleteDelegates.AddUObject( this , &UTivaNetGameInstance::OnMyCreateRoom );
 	}
 
 	FTimerHandle handle;
@@ -51,11 +53,9 @@ void UTivaNetGameInstance::CreateRoom(int maxPlayerCount, FString roomName)
 		UE_LOG( LogTemp , Warning , TEXT( "CreateRoomName : %s, netID : %s" ) , *roomName , *netID->ToString() );
 
 		sessionInterface->CreateSession( *netID , FName( *roomName ) , setting );
-
-		sessionInterface->OnCreateSessionCompleteDelegates.AddUObject( this , &UTivaNetGameInstance::OnMyCreateRoom );
 	}
 
 void UTivaNetGameInstance::OnMyCreateRoom( FName sessionName , bool bWasSuccessful )
 {
-	UE_LOG( LogTemp , Warning , TEXT( "OnMyCreateRoomComplete : %s, bWasSuccessful : %d" ) , *sessionName.ToString() , bWasSuccessful );
+	UE_LOG( LogTemp , Warning , TEXT( "OnCreateRoomComplete -> sessionName : %s, bwasSuccessful : %d" ) , *sessionName.ToString() , bWasSuccessful );
 }
