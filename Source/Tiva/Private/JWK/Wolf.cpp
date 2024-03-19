@@ -12,10 +12,8 @@
 #include "Tiva/TivaCharacter.h"
 
 
-// Sets default values
 AWolf::AWolf()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	wolfFSM = CreateDefaultSubobject<UWolfFSM>( TEXT( "wolfFSM" ) );
@@ -25,7 +23,6 @@ AWolf::AWolf()
 	SetReplicateMovement( true );
 }
 
-// Called when the game starts or when spawned
 void AWolf::BeginPlay()
 {
 	Super::BeginPlay();
@@ -40,19 +37,19 @@ void AWolf::PossessedBy( AController* NewController )
 	UE_LOG( LogTemp , Warning , TEXT( "AWolf::PossessedBy" ) );
 }
 
-// Called every frame
 void AWolf::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 }
 
-// Called to bind functionality to input
 void AWolf::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
 {
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
 
 }
 
+
+//////////////////////////////////////// 공격 당함 ////////////////////////////////////////
 void AWolf::WolfTakeDamage( float damage )
 {
 	WolfHP -= damage;

@@ -20,106 +20,102 @@
 // Sets default values
 ABossEnemy::ABossEnemy()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	//MyCapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// BossHPUI 생성
-	bossHealthUI = CreateDefaultSubobject<UWidgetComponent>( TEXT( "bossHealthUI" ) );
-	bossHealthUI->SetupAttachment( RootComponent );
-	bossHealthUI->SetRelativeLocation( FVector( 10 , 0 , 135 ) );
+	bossHealthUI = CreateDefaultSubobject<UWidgetComponent>(TEXT("bossHealthUI"));
+	bossHealthUI->SetupAttachment(RootComponent);
+	bossHealthUI->SetRelativeLocation(FVector(10 , 0 , 135));
 
-	bossFSM = CreateDefaultSubobject<UBossFSM>( TEXT( "bossFSM" ) );
+	bossFSM = CreateDefaultSubobject<UBossFSM>(TEXT("bossFSM"));
 
-	swordComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "swordComp" ) );
-	swordComp->SetupAttachment( GetMesh() , TEXT( "hand_rSocket" ) );
+	swordComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("swordComp"));
+	swordComp->SetupAttachment(GetMesh() , TEXT("hand_rSocket"));
 
-	attackSphereComp = CreateDefaultSubobject<USphereComponent>( TEXT( "attackSphereComp" ) );
-	attackSphereComp->SetupAttachment( swordComp );
-	attackSphereComp->SetWorldScale3D( FVector( 8.0f ) );
+	attackSphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("attackSphereComp"));
+	attackSphereComp->SetupAttachment(swordComp);
+	attackSphereComp->SetWorldScale3D(FVector(8.0f));
 
-	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>( TEXT( "movementComp" ) );
+	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("movementComp"));
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh>tempSword( TEXT( "/Script/Engine.StaticMesh'/Game/00_JWK/Blueprint/BP_Enemy/Boss/AatroxSword.AatroxSword'" ) );
+	ConstructorHelpers::FObjectFinder<UStaticMesh> tempSword(
+		TEXT("/Script/Engine.StaticMesh'/Game/00_JWK/Blueprint/BP_Enemy/Boss/AatroxSword.AatroxSword'"));
 
 	if (tempSword.Succeeded())
 	{
-		swordComp->SetStaticMesh( tempSword.Object );
-		swordComp->SetRelativeLocationAndRotation( FVector( 190 , -20 , 5 ) , FRotator( 90 , 0 , 90 ) );
-		swordComp->SetWorldScale3D( FVector( 0.25f ) );
+		swordComp->SetStaticMesh(tempSword.Object);
+		swordComp->SetRelativeLocationAndRotation(FVector(190 , -20 , 5) , FRotator(90 , 0 , 90));
+		swordComp->SetWorldScale3D(FVector(0.25f));
 	}
 
 	bReplicates = true;
-	SetReplicateMovement( true );
+	SetReplicateMovement(true);
 }
 
-// Called when the game starts or when spawned
 void ABossEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
 	NetUpdateFrequency = 100;
 
-	bossHPWidget = Cast<UBossHPWidget>( bossHealthUI->GetWidget() );
+	bossHPWidget = Cast<UBossHPWidget>(bossHealthUI->GetWidget());
 }
 
-// Called every frame
-void ABossEnemy::Tick( float DeltaTime )
+void ABossEnemy::Tick(float DeltaTime)
 {
-	Super::Tick( DeltaTime );
+	Super::Tick(DeltaTime);
 
 	MakeBilboard();
 }
 
-// Called to bind functionality to input
-void ABossEnemy::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
+void ABossEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent( PlayerInputComponent );
-
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
 
 //////////////////////////////////////// 공격 당함 ////////////////////////////////////////
-void ABossEnemy::BossTakeDamaged( int32 damage )
+void ABossEnemy::BossTakeDamaged(int32 damage)
 {
 	BossHP -= damage;
-	auto anim = Cast<UBossAnim>( GetMesh()->GetAnimInstance() );
+	auto anim = Cast<UBossAnim>(GetMesh()->GetAnimInstance());
 
 	if (BossHP <= 0)
 	{
-		bIsDie = true;
-
 		BossHP = 0;
 
+		bIsDie = true;
+
 		anim->PlayDeathAnimation();
-		GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	if (BossHP > 0)
 	{
 		anim->PlayHitAnimation();
-		//GetCharacterMovement()->SetMovementMode( MOVE_None );
+		GetCharacterMovement()->SetMovementMode( MOVE_None );
 	}
 
-	bossHPWidget->SetBosstHP( BossHP , BossMaxHP );
+	bossHPWidget->SetBosstHP(BossHP , BossMaxHP);
 }
 
 ////////////////////////////////// 보스 체력바 빌보드 처리 //////////////////////////////////
 void ABossEnemy::MakeBilboard()
 {
 	//카메라의 location과 UI의 location을 가져오고
-	FVector cameraLoc = UGameplayStatics::GetPlayerCameraManager( this , 0 )->GetCameraLocation();
+	FVector cameraLoc = UGameplayStatics::GetPlayerCameraManager(this , 0)->GetCameraLocation();
 	FVector uiLoc = bossHealthUI->GetComponentLocation();
 
 	//두 location을 빼서 normalize
 	FVector tmp = cameraLoc - uiLoc;
 	tmp.Normalize();
 	//make rot from x 해서
-	FRotator bilboardRotate = UKismetMathLibrary::MakeRotFromX( tmp );
+	FRotator bilboardRotate = UKismetMathLibrary::MakeRotFromX(tmp);
 	//UI의 rotation을 set
-	bossHealthUI->SetWorldRotation( bilboardRotate );
+	bossHealthUI->SetWorldRotation(bilboardRotate);
 }
 
 void ABossEnemy::FindChoosePlayer()
@@ -132,12 +128,12 @@ void ABossEnemy::FindChoosePlayer()
 		float tempDist = bossFSM->chasePlayerReach;
 
 
-		for (TActorIterator<ATivaCharacter> IT( GetWorld() ); IT; ++IT)
+		for (TActorIterator<ATivaCharacter> IT(GetWorld()); IT; ++IT)
 		{
 			ATivaCharacter* newPlayerCharacter = *IT;
 
 			// 플레이어와 나의 거리를 측정해서
-			float temp = newPlayerCharacter->GetDistanceTo( this );
+			float temp = newPlayerCharacter->GetDistanceTo(this);
 
 			// 만약 temp가 tempDist보다 가깝다면
 			if (temp <= tempDist)
@@ -152,13 +148,13 @@ void ABossEnemy::FindChoosePlayer()
 	}
 }
 
-void ABossEnemy::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+void ABossEnemy::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME( ABossEnemy , BossHP );
-	DOREPLIFETIME( ABossEnemy , bIsDie );
-	DOREPLIFETIME( ABossEnemy , playerTarget );
+	DOREPLIFETIME(ABossEnemy , BossHP);
+	DOREPLIFETIME(ABossEnemy , bIsDie);
+	DOREPLIFETIME(ABossEnemy , playerTarget);
 }
 
 //void ABossEnemy::DealDamage()

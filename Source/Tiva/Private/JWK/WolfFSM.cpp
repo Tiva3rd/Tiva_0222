@@ -2,9 +2,7 @@
 
 
 #include "JWK/WolfFSM.h"
-
 #include "AIController.h"
-#include "NavigationData.h"
 #include "NavigationSystem.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -14,11 +12,8 @@
 #include "Tiva/TivaCharacter.h"
 
 
-// Sets default values for this component's properties
 UWolfFSM::UWolfFSM()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
@@ -28,50 +23,58 @@ void UWolfFSM::BeginPlay()
 {
 	Super::BeginPlay();
 
-	me = Cast<AWolf>( GetOwner() );
-	ai = Cast<AAIController>( me->GetController() );
+	me = Cast<AWolf>(GetOwner());
+	ai = Cast<AAIController>(me->GetController());
 
-	UE_LOG( LogTemp , Warning , TEXT( "UWolfFSM::BeginPlay : %s" ) , *GetOwner()->GetActorNameOrLabel() );
-	wolfAnim = Cast<UWolfAnim>( me->GetMesh()->GetAnimInstance() );
+	UE_LOG(LogTemp , Warning , TEXT( "UWolfFSM::BeginPlay : %s" ) , *GetOwner()->GetActorNameOrLabel());
+	wolfAnim = Cast<UWolfAnim>(me->GetMesh()->GetAnimInstance());
 }
 
 
 // Called every frame
-void UWolfFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction )
+void UWolfFSM::TickComponent(float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent( DeltaTime , TickType , ThisTickFunction );
+	Super::TickComponent(DeltaTime , TickType , ThisTickFunction);
 
 	switch (state)
 	{
-	case EWolf::IDLE:					 TickIdle();				 break;
-	case EWolf::MOVE:					 TickMove();				 break;
-	case EWolf::ATTACK:					 TickAttack();				 break;
-	case EWolf::DEAD:					 TickDead();				 break;
+	case EWolf::IDLE: TickIdle();
+		break;
+	case EWolf::MOVE: TickMove();
+		break;
+	case EWolf::ATTACK: TickAttack();
+		break;
+	case EWolf::DEAD: TickDead();
+		break;
 	}
 
 
 	if (state != EWolf::DEAD && me->bIsDie == true)
-		SetState( EWolf::DEAD );
+		SetState(EWolf::DEAD);
 
-	FString stateString = UEnum::GetValueAsString<EWolf>( state );
-	DrawDebugString( GetWorld() , me->GetActorLocation() , stateString , me , FColor::Yellow , 0 , true , 1.0f );
+	FString stateString = UEnum::GetValueAsString<EWolf>(state);
+	DrawDebugString(GetWorld() , me->GetActorLocation() , stateString , me , FColor::Yellow , 0 , true , 1.0f);
 }
 
+
+//////////////////////////////////////// IDLE ////////////////////////////////////////
 void UWolfFSM::TickIdle()
 {
-	me->FindPlayer();/*playerTarget->GetDistanceTo( me );*/
+	me->FindPlayer(); /*playerTarget->GetDistanceTo( me );*/
 	//playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (me->playerTarget)
 	{
-		float distPlayer = me->playerTarget->GetDistanceTo( me );
+		float distPlayer = me->playerTarget->GetDistanceTo(me);
 
-		UE_LOG( LogTemp , Warning , TEXT( "State : Idle" ) );
+		UE_LOG(LogTemp , Warning , TEXT( "State : Idle" ));
 
 		if (distPlayer <= chasePlayerReach)
-			SetState( EWolf::MOVE );
+			SetState(EWolf::MOVE);
 	}
 }
 
+
+//////////////////////////////////////// MOVE ////////////////////////////////////////
 void UWolfFSM::TickMove()
 {
 	if (nullptr == me->playerTarget)
@@ -84,48 +87,48 @@ void UWolfFSM::TickMove()
 		return;
 
 	destinationToPlayer = me->playerTarget->GetActorLocation();
-	distanceToPlayer = me->playerTarget->GetDistanceTo( me );
+	distanceToPlayer = me->playerTarget->GetDistanceTo(me);
 
-	auto ns = UNavigationSystemV1::GetNavigationSystem( GetWorld() );
+	auto ns = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	FAIMoveRequest req;
-	req.SetAcceptanceRadius( 2000 );
-	req.SetGoalLocation( destinationToPlayer );
+	req.SetAcceptanceRadius(2000);
+	req.SetGoalLocation(destinationToPlayer);
 	FPathFindingQuery query;
-	ai->BuildPathfindingQuery( req , query );
-	FPathFindingResult r = ns->FindPathSync( query );
+	ai->BuildPathfindingQuery(req , query);
+	FPathFindingResult r = ns->FindPathSync(query);
 
 	if (r.Result == ENavigationQueryResult::Success)
 	{
 		if (distanceToPlayer <= chasePlayerReach)
 		{
-			UE_LOG( LogTemp , Warning , TEXT( "State : Move" ) );
-			ai->MoveToLocation( destinationToPlayer , 100 );
+			UE_LOG(LogTemp , Warning , TEXT( "State : Move" ));
+			ai->MoveToLocation(destinationToPlayer , 100);
 
 			if (distanceToPlayer <= attackDistance)
 			{
-				SetState( EWolf::ATTACK );
+				SetState(EWolf::ATTACK);
 				wolfAnim->bIsAttack = true;
 			}
 		}
 	}
 
 	else if (r.Result == ENavigationQueryResult::Fail)
-	{
 		return;
-	}
-
 }
 
+
+//////////////////////////////////////// ATTACK ////////////////////////////////////////
 void UWolfFSM::TickAttack()
 {
 	curTime += GetWorld()->GetDeltaSeconds();
-	UE_LOG( LogTemp , Warning , TEXT( "State : Attack" ) );
+	UE_LOG(LogTemp , Warning , TEXT( "State : Attack" ));
+
 	if (curTime > attackDelayTime)
 	{
 		curTime = 0;
-		float distance = me->playerTarget->GetDistanceTo( me );
+		float distance = me->playerTarget->GetDistanceTo(me);
 		if (distance > attackDistance)
-			SetState( EWolf::MOVE );
+			SetState(EWolf::MOVE);
 		else
 			wolfAnim->bIsAttack = true;
 	}
@@ -138,30 +141,30 @@ void UWolfFSM::DoDamageEnd()
 
 void UWolfFSM::TickDead()
 {
-	UE_LOG( LogTemp , Warning , TEXT( "State : Dead" ) );
-	me->GetCharacterMovement()->SetMovementMode( MOVE_None );
-	me->GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
+	UE_LOG(LogTemp , Warning , TEXT( "WolfState : Dead" ));
+	me->GetCharacterMovement()->SetMovementMode(MOVE_None);
+	me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-void UWolfFSM::SetState( EWolf next )
+void UWolfFSM::SetState(EWolf next)
 {
-	ServerSetState( next );
+	ServerSetState(next);
 }
 
-void UWolfFSM::ServerSetState_Implementation( EWolf nextState )
+void UWolfFSM::ServerSetState_Implementation(EWolf nextState)
 {
-	MultiSetState( nextState );
+	MultiSetState(nextState);
 }
 
-void UWolfFSM::MultiSetState_Implementation( EWolf nextState )
+void UWolfFSM::MultiSetState_Implementation(EWolf nextState)
 {
 	state = nextState;
 	curTime = 0;
 }
 
-void UWolfFSM::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+void UWolfFSM::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME( UWolfFSM , state );
+	DOREPLIFETIME(UWolfFSM , state);
 }
