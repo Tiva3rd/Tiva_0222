@@ -8,6 +8,6 @@ public class Tiva : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG","NavigationSystem", "AIModule", "GameplayTasks", "Niagara" , "OnlineSubsystem" ,"OnlineSubsystemSteam"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG","NavigationSystem", "AIModule", "GameplayTasks", "Niagara" , "OnlineSubsystem", "OnlineSubsystemSteam" });
 	}
 }
