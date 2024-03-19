@@ -2,30 +2,24 @@
 
 
 #include "JWK/BossFSM.h"
-
 #include "AIController.h"
 #include "AITypes.h"
 #include "NavigationSystem.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "JWK/BossAnim.h"
 #include "JWK/BossEnemy.h"
+#include "JWK/BossAnim.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "OJS/houseTargetColumn.h"
 
-// Sets default values for this component's properties
 UBossFSM::UBossFSM()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
 }
 
 
-// Called when the game starts
 void UBossFSM::BeginPlay()
 {
 	Super::BeginPlay();
@@ -126,9 +120,6 @@ void UBossFSM::TickMove()
 
 	else if (r.Result == ENavigationQueryResult::Fail)
 		return;
-
-	if (me->bIsDie == true)
-		SetState( EBoss_Enemy::DEAD );
 }
 
 
@@ -147,9 +138,6 @@ void UBossFSM::TickAttack()
 		else
 			bossAnim->bIsAttack = true;
 	}
-
-	if (me->bIsDie == true)
-		SetState( EBoss_Enemy::DEAD );
 }
 
 
@@ -164,6 +152,7 @@ void UBossFSM::DoDamageEnd()
 //////////////////////////////////////// DEAD ////////////////////////////////////////
 void UBossFSM::TickDead()
 {
+	UE_LOG(LogTemp , Warning , TEXT( "BossState : Dead" ));
 	me->GetCharacterMovement()->SetMovementMode( MOVE_None );
 	me->GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
 }

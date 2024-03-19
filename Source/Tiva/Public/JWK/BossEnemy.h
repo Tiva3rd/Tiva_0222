@@ -22,64 +22,65 @@ protected:
 
 public:
 	// Called every frame
-	virtual void Tick( float DeltaTime ) override;
+	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
 	//////////////////////////////////////// 컴포넌트 ////////////////////////////////////////
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	UPROPERTY(EditAnywhere , BlueprintReadOnly)
 	class UStaticMeshComponent* swordComp;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class USphereComponent* attackSphereComp;
 
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UBossFSM* bossFSM;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UCharacterMovementComponent* movementComp;
 
 
 	//////////////////////////////////////// Damaged ////////////////////////////////////////
-	UFUNCTION( BlueprintCallable )
-	void BossTakeDamaged( int32 damage );
+	UFUNCTION(BlueprintCallable)
+	void BossTakeDamaged(int32 damage);
 
+	UPROPERTY(EditAnywhere)
+	int32 BossMaxHP = 12;
 
+	UPROPERTY(Replicated , EditAnywhere)
+	int32 BossHP = BossMaxHP;
+
+	UPROPERTY(Replicated , EditAnywhere)
+	bool bIsAttacked = false;
+
+	UPROPERTY(Replicated , EditAnywhere)
+	bool bIsDie = false;
+
+	
 	//////////////////////////////////////// Boss Widget ////////////////////////////////////////
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UWidgetComponent* bossHealthUI;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UBossHPWidget* bossHPWidget;
 
 	UFUNCTION()
 	void MakeBilboard();
 
 
-	UPROPERTY( EditAnywhere )
-	int32 BossMaxHP = 12;
-
-	UPROPERTY( Replicated , EditAnywhere )
-	int32 BossHP = BossMaxHP;
-
-	UPROPERTY( Replicated , EditAnywhere )
-	bool bIsAttacked = false;
-
-	UPROPERTY( Replicated , EditAnywhere )
-	bool bIsDie = false;
-
 	//////////////////////////////////////// 플레이어 대미지 처리 ////////////////////////////////////////
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	class ATivaCharacter* player;
+	
 	////////////////////////////////////////////// NetWork //////////////////////////////////////////////
 	UFUNCTION()
 	void FindChoosePlayer();
 
-	UPROPERTY( Replicated , EditAnywhere )
+	UPROPERTY(Replicated , EditAnywhere)
 	class AActor* playerTarget;
 
-	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

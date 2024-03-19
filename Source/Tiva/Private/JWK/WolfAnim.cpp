@@ -2,7 +2,6 @@
 
 
 #include "JWK/WolfAnim.h"
-
 #include "JWK/Wolf.h"
 #include "Net/UnrealNetwork.h"
 
@@ -10,7 +9,7 @@ void UWolfAnim::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
-	me = Cast<AWolf>( TryGetPawnOwner() );
+	me = Cast<AWolf>(TryGetPawnOwner());
 
 	if (nullptr != me)
 		wolfFSM = me->wolfFSM;
@@ -19,18 +18,18 @@ void UWolfAnim::NativeInitializeAnimation()
 		return;
 }
 
-void UWolfAnim::NativeUpdateAnimation( float DeltaSeconds )
+void UWolfAnim::NativeUpdateAnimation(float DeltaSeconds)
 {
-	Super::NativeUpdateAnimation( DeltaSeconds );
+	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	me = Cast<AWolf>( TryGetPawnOwner() );
+	me = Cast<AWolf>(TryGetPawnOwner());
 
-	if (nullptr != me)
+	if (me)
 		wolfFSM = me->wolfFSM;
 
 	if (nullptr == wolfFSM)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("nullptr == wolfFSM"));
+		UE_LOG(LogTemp , Warning , TEXT("nullptr == wolfFSM"));
 		return;
 	}
 
@@ -44,6 +43,5 @@ void UWolfAnim::AnimNotify_WolfAttackEnd()
 
 void UWolfAnim::PlayDeathAnimation()
 {
-	Montage_Play( WolfDeath );
+	Montage_Play(WolfDeath);
 }
-

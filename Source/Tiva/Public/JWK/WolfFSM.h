@@ -60,6 +60,7 @@ public:
 	UPROPERTY()
 	float distanceToPlayer;
 
+	// Wolf State Function
 	void TickIdle();
 	void TickMove();
 	void TickAttack();

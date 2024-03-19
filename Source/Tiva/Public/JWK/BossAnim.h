@@ -32,6 +32,8 @@ public:
 	UPROPERTY( EditAnyWhere , BlueprintReadOnly )
 	class ABossEnemy* me;
 
+
+	
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
 	bool bIsChaseHome = true;
 
@@ -56,10 +58,13 @@ public:
 	UPROPERTY( EditAnywhere )
 	class UAnimMontage* BossDeath;
 
+	UFUNCTION()
 	void PlayDeathAnimation();
 
 	UPROPERTY( EditAnywhere )
 	class UAnimMontage* BossHit;
+
+	UFUNCTION()
 	void PlayHitAnimation();
 
 	UPROPERTY( EditAnywhere , BlueprintReadOnly )

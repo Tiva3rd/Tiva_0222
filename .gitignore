@@ -73,6 +73,9 @@ Plugins/*/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 
+# Rider Ignore files
+*.idea
+
 Content/ParagonSparrow
 /Tiva.bat
 /Plugins

@@ -3,13 +3,12 @@
 
 #include "JWK/BossAnim.h"
 #include "JWK/BossEnemy.h"
-#include "JWK/BossFSM.h"
 
 void UBossAnim::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
-	me = Cast<ABossEnemy>( TryGetPawnOwner() );
+	me = Cast<ABossEnemy>(TryGetPawnOwner());
 
 	if (nullptr != me)
 		bossFSM = me->bossFSM;
@@ -18,11 +17,19 @@ void UBossAnim::NativeInitializeAnimation()
 		return;
 }
 
-void UBossAnim::NativeUpdateAnimation( float DeltaSeconds )
+void UBossAnim::NativeUpdateAnimation(float DeltaSeconds)
 {
-	Super::NativeUpdateAnimation( DeltaSeconds );
-	if (nullptr == bossFSM)
+	Super::NativeUpdateAnimation(DeltaSeconds);
+
+	me = Cast<ABossEnemy>(TryGetPawnOwner());
+	if (me)
+		bossFSM = me->bossFSM;
+	
+	if(nullptr == bossFSM)
+	{
+		UE_LOG(LogTemp , Warning , TEXT("nullptr == bossFSM"));
 		return;
+	}
 
 	state = bossFSM->state;
 }
@@ -44,12 +51,12 @@ void UBossAnim::AnimNotify_BossDamageEnd()
 
 void UBossAnim::PlayDeathAnimation()
 {
-	Montage_Play( BossDeath );
+	Montage_Play(BossDeath);
 }
 
 void UBossAnim::PlayHitAnimation()
 {
-	Montage_Play( BossHit );
+	Montage_Play(BossHit);
 }
 
 //void UBossAnim::AnimNotify_DamageEnd()
