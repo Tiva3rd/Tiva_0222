@@ -63,14 +63,17 @@ void UBossFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComp
 	case EBoss_Enemy::ATTACK:					TickAttack();			break;
 	case EBoss_Enemy::DEAD:				        TickDead();				break;
 	}
+
+	me->FindChoosePlayer();
+
+	if (state != EBoss_Enemy::DEAD && me->bIsDie == true)
+		SetState( EBoss_Enemy::DEAD );
 }
 
 
 //////////////////////////////////////// IDLE ////////////////////////////////////////
 void UBossFSM::TickIdle()
 {
-	me->OnRep_PlayerState();
-
 	if (mainTarget)
 		SetState( EBoss_Enemy::MOVE );
 }
@@ -79,6 +82,9 @@ void UBossFSM::TickIdle()
 //////////////////////////////////////// MOVE ////////////////////////////////////////
 void UBossFSM::TickMove()
 {
+	if (nullptr == ai)
+		return;
+
 	bool chaseHome = bossAnim->bIsChaseHome;      // bossAnim 에서 bIsChaseHome = true
 	bool chasePlayer = bossAnim->bIsChasePlayer;
 
@@ -164,10 +170,17 @@ void UBossFSM::TickDead()
 
 void UBossFSM::SetState( EBoss_Enemy next )
 {
-	if (me->HasAuthority())
-	{
-		state = next;
-	}
+	ServerSetState( next );
+}
+
+void UBossFSM::ServerSetState_Implementation( EBoss_Enemy nextState )
+{
+	MultiCastSetStaet( nextState );
+}
+
+void UBossFSM::MultiCastSetStaet_Implementation( EBoss_Enemy nextState )
+{
+	state = nextState;
 	curTime = 0;
 }
 

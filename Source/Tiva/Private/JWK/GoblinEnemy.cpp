@@ -62,7 +62,7 @@ void AGoblinEnemy::GoblinTakeDamaged( int32 damage )
 	}
 }
 
-void AGoblinEnemy::FindPlayer()
+void AGoblinEnemy::FindChoosePlayer()
 {
 	// GoblinFSM 에서 TickIdle에서 PlayerSearch를 호출
 	//if (playerTarget)

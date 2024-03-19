@@ -58,7 +58,7 @@ public:
 
 	////////////////////////////////////////////// NetWork //////////////////////////////////////////////
 	UFUNCTION()
-	void FindPlayer();
+	void FindChoosePlayer();
 
 	UPROPERTY( Replicated , EditAnywhere )
 	class AActor* playerTarget;

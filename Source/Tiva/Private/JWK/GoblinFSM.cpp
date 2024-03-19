@@ -62,11 +62,11 @@ void UGoblinFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorCo
 	case EGoblin_Enemy::DEAD:				        TickDead();				break;
 	}
 
-	me->FindPlayer();
+	me->FindChoosePlayer();
 
 	//if (nullptr == me->playerTarget)
 	//{
-	//	me->FindPlayer();
+	//	me->FindChoosePlayer();
 	//	return;
 	//}
 

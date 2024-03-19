@@ -52,7 +52,7 @@ public:
 	class UBossAnim* bossAnim;
 
 	// Boss Enemy의 State
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	UPROPERTY( Replicated , EditAnywhere , BlueprintReadOnly )
 	EBoss_Enemy state;
 
 	// Boss Enemy 의 AI
@@ -83,6 +83,12 @@ public:
 	//class UAnimMontage* bossMontage;
 
 	void SetState( EBoss_Enemy next );
+
+	UFUNCTION( Server , Reliable )
+	void ServerSetState( EBoss_Enemy nextState );
+
+	UFUNCTION( NetMulticast , Reliable )
+	void MultiCastSetStaet( EBoss_Enemy nextState );
 
 	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
 };

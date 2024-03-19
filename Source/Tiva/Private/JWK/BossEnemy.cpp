@@ -13,7 +13,6 @@
 #include "JWK/BossAnim.h"
 #include "Net/UnrealNetwork.h"
 #include "JWK/BossHPWidget.h"
-#include "JWK/WolfAnim.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Tiva/TivaCharacter.h"
@@ -72,7 +71,6 @@ void ABossEnemy::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 
 	MakeBilboard();
-	OnRep_FindPlayer();
 }
 
 // Called to bind functionality to input
@@ -124,7 +122,7 @@ void ABossEnemy::MakeBilboard()
 	bossHealthUI->SetWorldRotation( bilboardRotate );
 }
 
-void ABossEnemy::OnRep_FindPlayer()
+void ABossEnemy::FindChoosePlayer()
 {
 	// 레벨에 있는 ATivaCharacter 객체들을 다 검사해서 chasePlayerReach안에 있고
 	// 그중에서도 가장 까가운녀석을 내 playerTarget으로 지정
