@@ -62,6 +62,8 @@ void ABossEnemy::BeginPlay()
 	NetUpdateFrequency = 100;
 
 	bossHPWidget = Cast<UBossHPWidget>(bossHealthUI->GetWidget());
+	
+	attackSphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABossEnemy::Tick(float DeltaTime)
@@ -80,19 +82,19 @@ void ABossEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 //////////////////////////////////////// 공격 당함 ////////////////////////////////////////
 void ABossEnemy::BossTakeDamaged(int32 damage)
 {
-	ServerBossTakeDamged( damage );
+	ServerBossTakeDamged(damage);
 }
 
 void ABossEnemy::ServerBossTakeDamged_Implementation(int32 damage)
 {
 	BossHP -= damage;
-	MultiBossTakeDamged( BossHP );
+	MultiBossTakeDamged(BossHP);
 }
 
 void ABossEnemy::MultiBossTakeDamged_Implementation(int32 newHP)
 {
 	BossHP = newHP;
-	auto anim = Cast<UBossAnim>( GetMesh()->GetAnimInstance() );
+	auto anim = Cast<UBossAnim>(GetMesh()->GetAnimInstance());
 
 	if (BossHP <= 0)
 	{
@@ -101,16 +103,16 @@ void ABossEnemy::MultiBossTakeDamged_Implementation(int32 newHP)
 		bIsDie = true;
 
 		anim->PlayDeathAnimation();
-		GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	if (BossHP > 0)
 	{
 		anim->PlayHitAnimation();
-		GetCharacterMovement()->SetMovementMode( MOVE_None );
+		GetCharacterMovement()->SetMovementMode(MOVE_None);
 	}
 
-	bossHPWidget->SetBosstHP( BossHP , BossMaxHP );
+	bossHPWidget->SetBosstHP(BossHP , BossMaxHP);
 }
 
 ////////////////////////////////// 보스 체력바 빌보드 처리 //////////////////////////////////

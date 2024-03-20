@@ -7,6 +7,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JWK/GoblinFSM.h"
 #include "EngineUtils.h"
+#include "Components/SlateWrapperTypes.h"
+#include "Components/SphereComponent.h"
 #include "JWK/GoblinAnim.h"
 #include "Net/UnrealNetwork.h"
 #include "Tiva/TivaCharacter.h"
@@ -17,11 +19,16 @@ AGoblinEnemy::AGoblinEnemy()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	goblinFSM = CreateDefaultSubobject<UGoblinFSM>( TEXT( "goblinFSM" ) );
+	goblinFSM = CreateDefaultSubobject<UGoblinFSM>(TEXT("goblinFSM"));
 
-	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>( TEXT( "movementComp" ) );
+	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("movementComp"));
+
+	attackSphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("attackSphereComp"));
+	attackSphereComp->SetupAttachment(GetMesh() , TEXT("FireDamage"));
+	attackSphereComp->SetWorldScale3D(FVector(2.0f));
+
 	bReplicates = true;
-	SetReplicateMovement( true );
+	SetReplicateMovement(true);
 }
 
 // Called when the game starts or when spawned
@@ -29,36 +36,46 @@ void AGoblinEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	attackSphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	NetUpdateFrequency = 100;
 }
 
 // Called every frame
-void AGoblinEnemy::Tick( float DeltaTime )
+void AGoblinEnemy::Tick(float DeltaTime)
 {
-	Super::Tick( DeltaTime );
-
+	Super::Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
-void AGoblinEnemy::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
+void AGoblinEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent( PlayerInputComponent );
-
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void AGoblinEnemy::GoblinTakeDamaged( int32 damage )
+void AGoblinEnemy::GoblinTakeDamaged(int32 damage)
+{
+	ServerGoblinTakeDamage(damage);
+}
+
+void AGoblinEnemy::ServerGoblinTakeDamage_Implementation(int32 damage)
 {
 	GoblinHP -= damage;
+	MultiCastGoblinTakeDamage(GoblinHP);
+}
 
+void AGoblinEnemy::MultiCastGoblinTakeDamage_Implementation(int32 newHp)
+{
+	GoblinHP = newHp;
 	if (GoblinHP <= 0)
 	{
 		GoblinHP = 0;
 
 		bIsDie = true;
 
-		auto anim = Cast<UGoblinAnim>( GetMesh()->GetAnimInstance() );
+		auto anim = Cast<UGoblinAnim>(GetMesh()->GetAnimInstance());
 		anim->PlayDeathAnimation();
-		GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
@@ -77,12 +94,12 @@ void AGoblinEnemy::FindChoosePlayer()
 		float tempDist = goblinFSM->chasePlayerReach;
 
 
-		for (TActorIterator<ATivaCharacter> IT( GetWorld() ); IT; ++IT)
+		for (TActorIterator<ATivaCharacter> IT(GetWorld()); IT; ++IT)
 		{
 			ATivaCharacter* newPlayerCharacter = *IT;
 
 			// 플레이어와 나의 거리를 측정해서
-			float temp = newPlayerCharacter->GetDistanceTo( this );
+			float temp = newPlayerCharacter->GetDistanceTo(this);
 
 			// 만약 temp가 tempDist보다 가깝다면
 			if (temp <= tempDist)
@@ -97,12 +114,11 @@ void AGoblinEnemy::FindChoosePlayer()
 	}
 }
 
-void AGoblinEnemy::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+void AGoblinEnemy::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME( AGoblinEnemy , GoblinHP );
-	DOREPLIFETIME( AGoblinEnemy , bIsDie );
-	DOREPLIFETIME( AGoblinEnemy , playerTarget );
+	DOREPLIFETIME(AGoblinEnemy , GoblinHP);
+	DOREPLIFETIME(AGoblinEnemy , bIsDie);
+	DOREPLIFETIME(AGoblinEnemy , playerTarget);
 }
-

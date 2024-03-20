@@ -16,53 +16,50 @@ class TIVA_API UGoblinAnim : public UAnimInstance
 	GENERATED_BODY()
 
 public:
-
 	virtual void NativeInitializeAnimation() override;
-	virtual void NativeUpdateAnimation( float DeltaSeconds ) override;
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	float speed = 0;
 
 	UPROPERTY()
 	class UGoblinFSM* goblinFSM;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	EGoblin_Enemy state;
 
-	UPROPERTY( EditAnyWhere , BlueprintReadOnly )
+	UPROPERTY(EditAnyWhere , BlueprintReadOnly)
 	class AGoblinEnemy* me;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	bool bIsChaseHome = true;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	bool bIsChasePlayer = false;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	bool bIsAttack = false;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	bool bIsFire = false;
 
 	UFUNCTION()
 	void AnimNotify_AttackStart();
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
-	class UParticleSystem* fireAttack;
-
 	UFUNCTION()
 	void AnimNotify_AttackEnd();
+
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
+	class UParticleSystem* fireAttack;
 
 	UFUNCTION()
 	void AnimNotify_GoblinHit();
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	class UAnimMontage* GoblinDeath;
 
 	void PlayDeathAnimation();
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UParticleSystemComponent* fire;
-
-
 };

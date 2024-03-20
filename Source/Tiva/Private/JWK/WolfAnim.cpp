@@ -2,6 +2,8 @@
 
 
 #include "JWK/WolfAnim.h"
+
+#include "Components/SphereComponent.h"
 #include "JWK/Wolf.h"
 #include "Net/UnrealNetwork.h"
 
@@ -36,8 +38,14 @@ void UWolfAnim::NativeUpdateAnimation(float DeltaSeconds)
 	state = wolfFSM->state;
 }
 
+void UWolfAnim::AnimNotify_WolfAttackStart()
+{
+	me->attackComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
 void UWolfAnim::AnimNotify_WolfAttackEnd()
 {
+	me->attackComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	bIsAttack = false;
 }
 

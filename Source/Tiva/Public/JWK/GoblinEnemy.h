@@ -21,47 +21,55 @@ protected:
 
 public:
 	// Called every frame
-	virtual void Tick( float DeltaTime ) override;
+	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// GoblinFSM 을 컴포넌트로
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UGoblinFSM* goblinFSM;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UCharacterMovementComponent* movementComp;
 
-
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
+	class USphereComponent* attackSphereComp;
+	
 
 	//////////////////////////////////////// 공격 당함 ////////////////////////////////////////
-	UFUNCTION( BlueprintCallable )
-	void GoblinTakeDamaged( int32 damage );
+	UFUNCTION(BlueprintCallable)
+	void GoblinTakeDamaged(int32 damage);
 
-	UPROPERTY( EditAnywhere )
+	UFUNCTION(Server , Reliable)
+	void ServerGoblinTakeDamage(int32 damage);
+
+	UFUNCTION(NetMulticast , Reliable)
+	void MultiCastGoblinTakeDamage(int32 newHp);
+
+	UPROPERTY(EditAnywhere)
 	int32 GoblinMaxHP = 3;
 
-	UPROPERTY( Replicated , EditAnywhere )
+	UPROPERTY(Replicated , EditAnywhere)
 	int32 GoblinHP = GoblinMaxHP;
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	bool bIsAttacked = false;
 
-	UPROPERTY( Replicated , EditAnywhere )
+	UPROPERTY(Replicated , EditAnywhere)
 	bool bIsDie = false;
 
 
 	//////////////////////////////////////// 플레이어 대미지 처리 ////////////////////////////////////////
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	class ATivaCharacter* player;
 
 	////////////////////////////////////////////// NetWork //////////////////////////////////////////////
 	UFUNCTION()
 	void FindChoosePlayer();
 
-	UPROPERTY( Replicated , EditAnywhere )
+	UPROPERTY(Replicated , EditAnywhere)
 	class AActor* playerTarget;
 
-	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

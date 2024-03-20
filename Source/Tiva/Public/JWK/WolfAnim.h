@@ -41,6 +41,9 @@ public:
 	bool bIsAttack = false;
 
 	UFUNCTION()
+	void AnimNotify_WolfAttackStart();
+	
+	UFUNCTION()
 	void AnimNotify_WolfAttackEnd();
 
 	UPROPERTY( EditAnywhere )

@@ -3,6 +3,7 @@
 
 #include "JWK/GoblinAnim.h"
 
+#include "Components/SphereComponent.h"
 #include "JWK/GoblinEnemy.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -11,7 +12,7 @@ void UGoblinAnim::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
-	me = Cast<AGoblinEnemy>( TryGetPawnOwner() );
+	me = Cast<AGoblinEnemy>(TryGetPawnOwner());
 
 	if (nullptr != me)
 		goblinFSM = me->goblinFSM;
@@ -20,9 +21,9 @@ void UGoblinAnim::NativeInitializeAnimation()
 		return;
 }
 
-void UGoblinAnim::NativeUpdateAnimation( float DeltaSeconds )
+void UGoblinAnim::NativeUpdateAnimation(float DeltaSeconds)
 {
-	Super::NativeUpdateAnimation( DeltaSeconds );
+	Super::NativeUpdateAnimation(DeltaSeconds);
 
 	if (nullptr == goblinFSM)
 		return;
@@ -32,20 +33,23 @@ void UGoblinAnim::NativeUpdateAnimation( float DeltaSeconds )
 
 void UGoblinAnim::AnimNotify_AttackStart()
 {
-	FTransform s = this->GetSkelMeshComponent()->GetSocketTransform( TEXT( "FireAttack" ) );
+	FTransform s = this->GetSkelMeshComponent()->GetSocketTransform(TEXT("FireAttack"));
 
-	fire = UGameplayStatics::SpawnEmitterAtLocation( GetWorld() , fireAttack , s );
+	fire = UGameplayStatics::SpawnEmitterAtLocation(GetWorld() , fireAttack , s);
+
+	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	FTimerHandle handle;
-	GetWorld()->GetTimerManager().SetTimer(handle, [&]()
+	GetWorld()->GetTimerManager().SetTimer(handle , [&]()
 	{
 		fire->DestroyComponent();
-	}, 2.5, false);
+	} , 2.5 , false);
 }
 
 void UGoblinAnim::AnimNotify_AttackEnd()
 {
 	bIsAttack = false;
+	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void UGoblinAnim::AnimNotify_GoblinHit()
@@ -54,5 +58,5 @@ void UGoblinAnim::AnimNotify_GoblinHit()
 
 void UGoblinAnim::PlayDeathAnimation()
 {
-	Montage_Play( GoblinDeath );
+	Montage_Play(GoblinDeath);
 }

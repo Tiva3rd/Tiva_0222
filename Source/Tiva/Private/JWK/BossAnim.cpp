@@ -2,6 +2,8 @@
 
 
 #include "JWK/BossAnim.h"
+
+#include "Components/SphereComponent.h"
 #include "JWK/BossEnemy.h"
 
 void UBossAnim::NativeInitializeAnimation()
@@ -24,8 +26,8 @@ void UBossAnim::NativeUpdateAnimation(float DeltaSeconds)
 	me = Cast<ABossEnemy>(TryGetPawnOwner());
 	if (me)
 		bossFSM = me->bossFSM;
-	
-	if(nullptr == bossFSM)
+
+	if (nullptr == bossFSM)
 	{
 		UE_LOG(LogTemp , Warning , TEXT("nullptr == bossFSM"));
 		return;
@@ -36,11 +38,14 @@ void UBossAnim::NativeUpdateAnimation(float DeltaSeconds)
 
 void UBossAnim::AnimNotify_BossAttack()
 {
-	//Dealdamage->DealDamage();
+	// 공격 시작하면 Collision On
+	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void UBossAnim::AnimNotify_AttackEnd()
 {
+	// 공격 끝나면 Collision OFF
+	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	bIsAttack = false;
 }
 

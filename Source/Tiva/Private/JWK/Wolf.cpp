@@ -2,9 +2,9 @@
 
 
 #include "JWK/Wolf.h"
-
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 #include "JWK/WolfFSM.h"
 #include "EngineUtils.h"
 #include "JWK/WolfAnim.h"
@@ -16,52 +16,70 @@ AWolf::AWolf()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	wolfFSM = CreateDefaultSubobject<UWolfFSM>( TEXT( "wolfFSM" ) );
+	wolfFSM = CreateDefaultSubobject<UWolfFSM>(TEXT("wolfFSM"));
 
-	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>( TEXT( "movementComp" ) );
+	movementComp = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("movementComp"));
+
+	attackComp = CreateDefaultSubobject<USphereComponent>(TEXT("attackSphere"));
+	attackComp->SetupAttachment(GetMesh() , TEXT("BiteAttack"));
+	attackComp->SetWorldScale3D(FVector(0.5f));
+
 	bReplicates = true;
-	SetReplicateMovement( true );
+	SetReplicateMovement(true);
 }
 
 void AWolf::BeginPlay()
 {
 	Super::BeginPlay();
 
+	attackComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	NetUpdateFrequency = 100;
 }
 
-void AWolf::PossessedBy( AController* NewController )
+void AWolf::PossessedBy(AController* NewController)
 {
-	Super::PossessedBy( NewController );
+	Super::PossessedBy(NewController);
 
-	UE_LOG( LogTemp , Warning , TEXT( "AWolf::PossessedBy" ) );
+	UE_LOG(LogTemp , Warning , TEXT( "AWolf::PossessedBy" ));
 }
 
-void AWolf::Tick( float DeltaTime )
+void AWolf::Tick(float DeltaTime)
 {
-	Super::Tick( DeltaTime );
+	Super::Tick(DeltaTime);
 }
 
-void AWolf::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
+void AWolf::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent( PlayerInputComponent );
-
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
 
 //////////////////////////////////////// 공격 당함 ////////////////////////////////////////
-void AWolf::WolfTakeDamage( float damage )
+void AWolf::WolfTakeDamage(float damage)
+{
+	ServerWolfTakeDamage(damage);
+}
+
+void AWolf::ServerWolfTakeDamage_Implementation(float damage)
 {
 	WolfHP -= damage;
+	MultiCastWolfTakeDamage(damage);
+}
+
+void AWolf::MultiCastWolfTakeDamage_Implementation(float newHP)
+{
+	WolfHP = newHP;
+
 	if (WolfHP <= 0)
 	{
 		WolfHP = 0;
 
 		bIsDie = true;
 
-		auto anim = Cast<UWolfAnim>( GetMesh()->GetAnimInstance() );
+		auto anim = Cast<UWolfAnim>(GetMesh()->GetAnimInstance());
 		anim->PlayDeathAnimation();
-		GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
@@ -79,12 +97,12 @@ void AWolf::FindPlayer()
 		float tempDist = wolfFSM->chasePlayerReach;
 
 
-		for (TActorIterator<ATivaCharacter> IT( GetWorld() ); IT; ++IT)
+		for (TActorIterator<ATivaCharacter> IT(GetWorld()); IT; ++IT)
 		{
 			ATivaCharacter* newPlayerCharacter = *IT;
 
 			// 플레이어와 나의 거리를 측정해서
-			float temp = newPlayerCharacter->GetDistanceTo( this );
+			float temp = newPlayerCharacter->GetDistanceTo(this);
 
 			// 만약 temp가 tempDist보다 가깝다면
 			if (temp <= tempDist)
@@ -100,12 +118,11 @@ void AWolf::FindPlayer()
 }
 
 
-void AWolf::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+void AWolf::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME( AWolf , WolfHP );
-	DOREPLIFETIME( AWolf , bIsDie );
-	DOREPLIFETIME( AWolf , playerTarget );
+	DOREPLIFETIME(AWolf , WolfHP);
+	DOREPLIFETIME(AWolf , bIsDie);
+	DOREPLIFETIME(AWolf , playerTarget);
 }
-
