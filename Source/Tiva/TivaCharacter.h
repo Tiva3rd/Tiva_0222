@@ -91,6 +91,13 @@ public:
 	UFUNCTION( BlueprintCallable )
 	void PlayerTakeDamaged( int32 damage );
 
+	UFUNCTION(Server, Reliable)
+	void ServerPlayerTakeDamaged( int32 damage );
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiPlayerTakeDamaged( float newHP );
+
+
 	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
 };
 

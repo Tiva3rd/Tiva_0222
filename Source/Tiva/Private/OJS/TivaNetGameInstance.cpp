@@ -47,7 +47,7 @@ void UTivaNetGameInstance::CreateRoom(int maxPlayerCount, FString roomName)
 		// 6. 최대 입장 가능한 수 설정
 		setting.NumPublicConnections = maxPlayerCount;
 		// 7. 커스텀정보 설정
-		setting.Set( TEXT( "HOST_NAME" ) , _hostName , EOnlineDataAdvertisementType::ViaOnlineServiceAndPing );
+		//setting.Set( TEXT( "HOST_NAME" ) , _hostName , EOnlineDataAdvertisementType::ViaOnlineServiceAndPing );
 		setting.Set( TEXT( "ROOM_NAME" ) , roomName , EOnlineDataAdvertisementType::ViaOnlineServiceAndPing );
 
 		// 8. netID 찾기

@@ -137,8 +137,18 @@ void ATivaCharacter::Look(const FInputActionValue& Value)
 
 void ATivaCharacter::PlayerTakeDamaged( int32 damage )
 {
-	playerHP -= float(damage);
+	ServerPlayerTakeDamaged( damage );
+}
 
+void ATivaCharacter::ServerPlayerTakeDamaged_Implementation(int32 damage)
+{
+	playerHP -= float( damage );
+	MultiPlayerTakeDamaged( playerHP );
+}
+
+void ATivaCharacter::MultiPlayerTakeDamaged_Implementation(float newHP)
+{
+	playerHP = newHP;
 	if (playerHP <= 0)
 	{
 		playerHP = 0;
