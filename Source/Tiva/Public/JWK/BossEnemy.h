@@ -47,6 +47,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void BossTakeDamaged(int32 damage);
 
+	UFUNCTION(Server, Reliable)
+	void ServerBossTakeDamged( int32 damage );
+
+	UFUNCTION( NetMulticast , Reliable )
+	void MultiBossTakeDamged( int32 hp );
+
 	UPROPERTY(EditAnywhere)
 	int32 BossMaxHP = 12;
 

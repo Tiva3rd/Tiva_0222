@@ -80,8 +80,19 @@ void ABossEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 //////////////////////////////////////// 공격 당함 ////////////////////////////////////////
 void ABossEnemy::BossTakeDamaged(int32 damage)
 {
+	ServerBossTakeDamged( damage );
+}
+
+void ABossEnemy::ServerBossTakeDamged_Implementation(int32 damage)
+{
 	BossHP -= damage;
-	auto anim = Cast<UBossAnim>(GetMesh()->GetAnimInstance());
+	MultiBossTakeDamged( BossHP );
+}
+
+void ABossEnemy::MultiBossTakeDamged_Implementation(int32 newHP)
+{
+	BossHP = newHP;
+	auto anim = Cast<UBossAnim>( GetMesh()->GetAnimInstance() );
 
 	if (BossHP <= 0)
 	{
@@ -90,7 +101,7 @@ void ABossEnemy::BossTakeDamaged(int32 damage)
 		bIsDie = true;
 
 		anim->PlayDeathAnimation();
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
 	}
 
 	if (BossHP > 0)
@@ -99,7 +110,7 @@ void ABossEnemy::BossTakeDamaged(int32 damage)
 		GetCharacterMovement()->SetMovementMode( MOVE_None );
 	}
 
-	bossHPWidget->SetBosstHP(BossHP , BossMaxHP);
+	bossHPWidget->SetBosstHP( BossHP , BossMaxHP );
 }
 
 ////////////////////////////////// 보스 체력바 빌보드 처리 //////////////////////////////////
