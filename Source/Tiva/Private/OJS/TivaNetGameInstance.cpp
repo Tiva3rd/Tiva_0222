@@ -5,6 +5,7 @@
 
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
+#include "Online/OnlineSessionNames.h"
 
 void UTivaNetGameInstance::Init()
 {
@@ -14,19 +15,20 @@ void UTivaNetGameInstance::Init()
 		sessionInterface = subsystem->GetSessionInterface();
 
 		sessionInterface->OnCreateSessionCompleteDelegates.AddUObject( this , &UTivaNetGameInstance::OnMyCreateRoom );
+		sessionInterface->OnFindSessionsCompleteDelegates.AddUObject( this , &UTivaNetGameInstance::OnMyFindOtherRoomsComplete );
 	}
 
 	FTimerHandle handle;
 	GetTimerManager().SetTimer( handle , [&]()
 	{
-		CreateRoom( 10 , hostName );
+		FindOtherRooms();
 	},5,false );
 
 }
 
 void UTivaNetGameInstance::CreateRoom(int maxPlayerCount, FString roomName)
 	{
-	UE_LOG( LogTemp , Warning , TEXT( "CreateRooom!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" ) );
+	UE_LOG( LogTemp , Warning , TEXT( "CreateRooom!!!!!!!!!!!!@@@!!!!1" ) );
 
 		FOnlineSessionSettings setting;
 
@@ -45,7 +47,7 @@ void UTivaNetGameInstance::CreateRoom(int maxPlayerCount, FString roomName)
 		// 6. 최대 입장 가능한 수 설정
 		setting.NumPublicConnections = maxPlayerCount;
 		// 7. 커스텀정보 설정
-		setting.Set( TEXT( "HOST_NAME" ) , hostName , EOnlineDataAdvertisementType::ViaOnlineServiceAndPing );
+		setting.Set( TEXT( "HOST_NAME" ) , _hostName , EOnlineDataAdvertisementType::ViaOnlineServiceAndPing );
 		setting.Set( TEXT( "ROOM_NAME" ) , roomName , EOnlineDataAdvertisementType::ViaOnlineServiceAndPing );
 
 		// 8. netID 찾기
@@ -53,9 +55,77 @@ void UTivaNetGameInstance::CreateRoom(int maxPlayerCount, FString roomName)
 		UE_LOG( LogTemp , Warning , TEXT( "CreateRoomName : %s, netID : %s" ) , *roomName , *netID->ToString() );
 
 		sessionInterface->CreateSession( *netID , FName( *roomName ) , setting );
+
+		UE_LOG( LogTemp , Warning , TEXT( "CreateRooom!!!!!!!!!!!!@@@!!!!2" ) );
 	}
 
 void UTivaNetGameInstance::OnMyCreateRoom( FName sessionName , bool bWasSuccessful )
 {
 	UE_LOG( LogTemp , Warning , TEXT( "OnCreateRoomComplete -> sessionName : %s, bwasSuccessful : %d" ) , *sessionName.ToString() , bWasSuccessful );
+
+		//if (bWasSuccessful)
+		//{
+		//	// 입장한 방의 이름을 기억하고싶다.
+		//	myRoomName = sessionName.ToString();
+		//	// 서버는 세계 여행을 떠나고싶다. 어디로???
+		//	FString url = TEXT( "/Game/Net/Maps/BattleMap?listen" );
+		//	GetWorld()->ServerTravel( url );
+		//}
+}
+
+void UTivaNetGameInstance::FindOtherRooms()
+{
+	// 1. FOnlineSessionSearch객체를 생성
+	roomSearch = MakeShareable( new FOnlineSessionSearch() );
+	// 2. 세션 검색 조건 설정
+	roomSearch->QuerySettings.Set( SEARCH_PRESENCE , true , EOnlineComparisonOp::Equals );
+	// 3. 최대 검색 갯수를 정하고 싶다.
+	roomSearch->MaxSearchResults = 10;
+	// 4. 랜선인지 아닌지를 정하고 싶다.
+	auto subSys = IOnlineSubsystem::Get();
+	roomSearch->bIsLanQuery = subSys->GetSubsystemName().IsEqual( "NULL" );
+
+
+	// 5. 검색을 하고싶다.
+	sessionInterface->FindSessions( 0 , roomSearch.ToSharedRef() );
+	UE_LOG( LogTemp , Warning , TEXT( "------FindSessionDONE!------" ) );
+}
+
+void UTivaNetGameInstance::OnMyFindOtherRoomsComplete(bool bWasSuccessful)
+{
+	int32 int_reuslt = roomSearch->SearchResults.Num();
+	UE_LOG( LogTemp , Warning , TEXT( "OnMyFindOtherRoomsComplete4 : %d" ) , bWasSuccessful );
+	UE_LOG( LogTemp , Warning , TEXT( "OnMyFindOtherRoomsComplete5" ));
+	UE_LOG( LogTemp , Warning , TEXT("dd : %d"), int_reuslt );
+
+	for (int i = 0; i < roomSearch->SearchResults.Num(); i++)
+	{
+
+		UE_LOG( LogTemp , Warning , TEXT( "FUCk11!!" ) );
+
+		auto r = roomSearch->SearchResults[i];
+		if (false == r.IsValid())
+			continue;
+
+		FRoomInfo info;
+
+		info.index = i;
+
+		r.Session.SessionSettings.Get( TEXT( "ROOM_NAME" ) , info.roomName );
+		r.Session.SessionSettings.Get( TEXT( "HOST_NAME" ) , info._hostName );
+
+		int32 max = r.Session.SessionSettings.NumPublicConnections; // 최대인원수
+		// 현재 입장 플레이어 수 = 최대 - 입장가능 수 
+		int32 current = max - r.Session.NumOpenPublicConnections;
+		info.playerCount = FString::Printf( TEXT( "%d/%d" ) , current , max );
+		info.pingMS = FString::Printf( TEXT( "%dms" ) , r.PingInMs );
+		info.PrintLog();
+
+		UE_LOG( LogTemp , Warning , TEXT( "FUCk22@@") );
+
+		if (onAddRoomInfoDelegate.IsBound())
+		{
+			onAddRoomInfoDelegate.Broadcast( info );
+		}
+	}
 }
