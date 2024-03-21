@@ -48,14 +48,14 @@ public:
 	// 방검색 후 방생성에 관련 델리게이트
 	FAddRoomInfoDelegate onAddRoomInfoDelegate;
 
-	FString myNickName = TEXT( "Jacobyi" );
+	FString myNickName = TEXT( "JacobyiPlayer" );
 	// 현재 입장한 방의 이름을 기억하고싶다.
-	FString myRoomName;
+	FString myRoomName = TEXT( "JacobyiRoom" );
 
 
 	void CreateRoom( int32 maxPlayerCount , FString roomName );
 
-	void OnMyCreateRoom( FName sessionName , bool bWasSuccessful );
+	void OnMyCreateRoomComplete( FName sessionName , bool bWasSuccessful );
 
 	//FString _hostName;
 	//FString roomName;

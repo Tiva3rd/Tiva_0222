@@ -44,11 +44,13 @@ void ULobbyWidget::NativeConstruct()
 void ULobbyWidget::OnMyClicked_doCreateRoom()
 {
 	FString roomName = edit_roomName->GetText().ToString();
+
 	if (edit_roomName->GetText().IsEmpty())
 	{
 		UE_LOG( LogTemp , Warning , TEXT( "Write Your Room Name1" ) );
+		return;
 	}
-
+	///////////
 	TArray<FString> badWords;
 	badWords.Add( TEXT( "바보" ) );
 	bool isBadWord = false;
@@ -60,11 +62,9 @@ void ULobbyWidget::OnMyClicked_doCreateRoom()
 			return;
 		}
 	}
-
-	UE_LOG( LogTemp , Warning , TEXT( "FUCk111111" ));
+	////////////////
 	int32 maxPlayer = slider_maxPlayer->GetValue();
 	ti->CreateRoom( maxPlayer , roomName);
-	UE_LOG( LogTemp , Warning , TEXT( "Fuck2222222" ));
 }
 
 void ULobbyWidget::SwitchPanel(int32 index)
