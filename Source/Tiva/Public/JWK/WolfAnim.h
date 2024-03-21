@@ -42,6 +42,9 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_WolfAttackStart();
+
+	UFUNCTION()
+	void AnimNotify_WolfAttackCollision();
 	
 	UFUNCTION()
 	void AnimNotify_WolfAttackEnd();

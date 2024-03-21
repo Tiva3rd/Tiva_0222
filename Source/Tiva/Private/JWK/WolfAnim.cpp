@@ -43,9 +43,13 @@ void UWolfAnim::AnimNotify_WolfAttackStart()
 	me->attackComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
-void UWolfAnim::AnimNotify_WolfAttackEnd()
+void UWolfAnim::AnimNotify_WolfAttackCollision()
 {
 	me->attackComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void UWolfAnim::AnimNotify_WolfAttackEnd()
+{
 	bIsAttack = false;
 }
 

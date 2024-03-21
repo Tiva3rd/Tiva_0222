@@ -42,10 +42,14 @@ void UBossAnim::AnimNotify_BossAttack()
 	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
+void UBossAnim::AnimNotify_BossAttackCollision()
+{
+	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
 void UBossAnim::AnimNotify_AttackEnd()
 {
 	// 공격 끝나면 Collision OFF
-	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	bIsAttack = false;
 }
 

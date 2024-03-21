@@ -47,6 +47,9 @@ public:
 	void AnimNotify_BossAttack();
 
 	UFUNCTION()
+	void AnimNotify_BossAttackCollision();
+	
+	UFUNCTION()
 	void AnimNotify_AttackEnd();
 
 	UFUNCTION()

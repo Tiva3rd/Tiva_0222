@@ -100,7 +100,7 @@ void UBossFSM::TickMove()
 	// 만약 타겟이 있다면
 	if (r.Result == ENavigationQueryResult::Success)
 	{
-		ai->MoveToLocation( destinationToHome , 100 );
+		ai->MoveToLocation( destinationToHome , 150 );
 		if (distanceToHome < attackDistance)
 		{
 			SetState( EBoss_Enemy::ATTACK );
@@ -109,7 +109,7 @@ void UBossFSM::TickMove()
 
 		else if (distanceToPlayer < chasePlayerReach)
 		{
-			ai->MoveToLocation( destinationToPlayer , 100 );
+			ai->MoveToLocation( destinationToPlayer , 150 );
 			if (distanceToPlayer < attackDistance)
 			{
 				SetState( EBoss_Enemy::ATTACK );
