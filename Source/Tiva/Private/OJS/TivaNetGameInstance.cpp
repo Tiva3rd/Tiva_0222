@@ -16,6 +16,8 @@ void UTivaNetGameInstance::Init()
 
 		sessionInterface->OnCreateSessionCompleteDelegates.AddUObject( this , &UTivaNetGameInstance::OnMyCreateRoomComplete );
 		sessionInterface->OnFindSessionsCompleteDelegates.AddUObject( this , &UTivaNetGameInstance::OnMyFindOtherRoomsComplete );
+
+		sessionInterface->OnJoinSessionCompleteDelegates.AddUObject( this , &UTivaNetGameInstance::OnMyJoinRoomComplete );
 	}
 
 	FTimerHandle handle;
@@ -86,14 +88,14 @@ void UTivaNetGameInstance::OnMyCreateRoomComplete( FName sessionName , bool bWas
 {
 	UE_LOG( LogTemp , Warning , TEXT( "OnCreateRoomComplete -> sessionName : %s, bwasSuccessful : %d" ) , *sessionName.ToString() , bWasSuccessful );
 
-		//if (bWasSuccessful)
-		//{
-		//	// 입장한 방의 이름을 기억하고싶다.
+		if (bWasSuccessful)
+		{
+			// 입장한 방의 이름을 기억하고싶다.
 		//	myRoomName = sessionName.ToString();
-		//	// 서버는 세계 여행을 떠나고싶다. 어디로???
-		//	FString url = TEXT( "/Game/Net/Maps/BattleMap?listen" );
-		//	GetWorld()->ServerTravel( url );
-		//}
+			// 서버는 세계 여행을 떠나고싶다. 어디로???
+			FString url = TEXT( "/Game/00_OJS/Map/TivaTestMap?listen" );
+			GetWorld()->ServerTravel( url );
+		}
 }
 
 void UTivaNetGameInstance::FindOtherRooms()
@@ -111,13 +113,23 @@ void UTivaNetGameInstance::FindOtherRooms()
 
 	// 5. 검색을 하고싶다.
 	sessionInterface->FindSessions( 0 , roomSearch.ToSharedRef() );
+
+	if(onFindingRoomsDelegate.IsBound())
+	{
+		onFindingRoomsDelegate.Broadcast( true );
+	}
 	UE_LOG( LogTemp , Warning , TEXT( "------FindSessionDONE!------" ) );
 }
 
 void UTivaNetGameInstance::OnMyFindOtherRoomsComplete(bool bWasSuccessful)
 {
+	if (onFindingRoomsDelegate.IsBound())
+	{
+		onFindingRoomsDelegate.Broadcast( false );
+	}
+
 	int32 int_reuslt = roomSearch->SearchResults.Num();
-	UE_LOG( LogTemp , Warning , TEXT( "OnMyFindOtherRoomsComplete7 : %d" ) , bWasSuccessful );
+	UE_LOG( LogTemp , Warning , TEXT( "OnMyFindOtherRoomsComplete8 : %d" ) , bWasSuccessful );
 	UE_LOG( LogTemp , Warning , TEXT("방 개수 : %d"), int_reuslt );
 
 	for (int i = 0; i < roomSearch->SearchResults.Num(); i++)
@@ -144,5 +156,33 @@ void UTivaNetGameInstance::OnMyFindOtherRoomsComplete(bool bWasSuccessful)
 		{
 			onAddRoomInfoDelegate.Broadcast( info );
 		}
+	}
+}
+
+void UTivaNetGameInstance::JoinRoom(int32 index)
+{
+	auto r = roomSearch->SearchResults[index];
+	FString sessionName;
+	r.Session.SessionSettings.Get( TEXT( "ROOM_NAME" ) , sessionName );
+	sessionInterface->JoinSession( 0 , FName( *sessionName ) , r );
+}
+
+void UTivaNetGameInstance::OnMyJoinRoomComplete(FName sessionName, EOnJoinSessionCompleteResult::Type result)
+{
+	// 성공했다면?
+	if (EOnJoinSessionCompleteResult::Success == result)
+	{
+		// 서버의 주소를 받아와서
+		FString url;
+		sessionInterface->GetResolvedConnectString( sessionName , url );
+		// 여행을 떠나고 싶다.
+		auto pc = GetWorld()->GetFirstPlayerController();
+		if(pc)
+		{
+		pc->ClientTravel( url , TRAVEL_Absolute );
+		}
+	}else
+	{
+		UE_LOG( LogTemp , Warning , TEXT( "Join Session Failed... : %d" ) , result );
 	}
 }

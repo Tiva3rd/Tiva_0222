@@ -33,7 +33,7 @@ struct FRoomInfo
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FAddRoomInfoDelegate , const FRoomInfo& , roomInfo );
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FFindingRoomsDelegate , bool , bActive );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FFindingRoomsDelegate , bool , bFinding);
 
 UCLASS()
 class TIVA_API UTivaNetGameInstance : public UGameInstance
@@ -47,6 +47,7 @@ public:
 
 	// 방검색 후 방생성에 관련 델리게이트
 	FAddRoomInfoDelegate onAddRoomInfoDelegate;
+	FFindingRoomsDelegate onFindingRoomsDelegate;
 
 	FString myNickName = TEXT( "JacobyiPlayer" );
 	// 현재 입장한 방의 이름을 기억하고싶다.
@@ -65,4 +66,8 @@ public:
 	void FindOtherRooms();
 	// 세션검색응답
 	void OnMyFindOtherRoomsComplete( bool bWasSuccessful );
+
+	void JoinRoom( int32 index );
+	// 방 입장 응답
+	void OnMyJoinRoomComplete( FName sessionName , EOnJoinSessionCompleteResult::Type result );
 };

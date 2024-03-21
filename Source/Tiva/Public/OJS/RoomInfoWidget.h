@@ -36,4 +36,7 @@ public:
 
 	UPROPERTY( EditDefaultsOnly , meta = (BindWidget) )
 	class UButton* btn_join;
+
+	UFUNCTION()
+	void OnMyJoinRoom();
 };

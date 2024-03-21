@@ -83,4 +83,12 @@ public:
 	void AddRoomInfoWidget( const struct FRoomInfo& roomInfo );
 
 
+
+	UPROPERTY( EditDefaultsOnly , meta = (BindWidget) )
+	class UTextBlock* txt_findingRooms;
+
+	UFUNCTION()
+	void SetFindActive( bool bActive );
+
+
 };

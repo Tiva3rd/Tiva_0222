@@ -19,6 +19,7 @@ void ULobbyWidget::NativeConstruct()
 
 	if(ti){
 		ti->onAddRoomInfoDelegate.AddDynamic( this , &ULobbyWidget::AddRoomInfoWidget );
+		ti->onFindingRoomsDelegate.AddDynamic( this , &ULobbyWidget::SetFindActive );
 	}
 
 		slider_maxPlayer->OnValueChanged.AddDynamic( this , &ULobbyWidget::OnMyValueChage_maxPlayer );
@@ -85,6 +86,7 @@ void ULobbyWidget::OnGoCreateRoom()
 void ULobbyWidget::OnGoFindRoom()
 {
 	SwitchPanel(2);
+	OnMyDoFindRoomList();
 }
 
 void ULobbyWidget::OnMyDoFindRoomList()
@@ -94,7 +96,6 @@ void ULobbyWidget::OnMyDoFindRoomList()
 	{
 		ti->FindOtherRooms();
 	}
-	UE_LOG( LogTemp , Warning , TEXT( "FIndDone" ) );
 }
 
 void ULobbyWidget::AddRoomInfoWidget(const FRoomInfo& roomInfo)
@@ -105,9 +106,29 @@ void ULobbyWidget::AddRoomInfoWidget(const FRoomInfo& roomInfo)
 	// 위젯을 생성해서 roomInfoFactory
 	auto ui = CreateWidget<URoomInfoWidget>( GetWorld() , roomInfoFactory );
 
+	ui->setInfo( roomInfo );
 	// scroll_roomList의 자식으로 붙이고싶다.
 	if(ui)
 	scroll_RoomList->AddChild( ui );
+}
+
+void ULobbyWidget::SetFindActive(bool bActive)
+{
+	// bActive가 true라면
+	if (bActive)
+	{
+		// btn_doFindRoomList 버튼을 비활성화 하고싶다.
+		btn_doFindRoomList->SetIsEnabled( false );
+		// txt_findingRooms를 보이게 하고싶다.
+		txt_findingRooms->SetVisibility( ESlateVisibility::Visible );
+	}
+	// 그렇지 않다면
+	else {
+		// btn_doFindRoomList 버튼을 활성화 하고싶다.
+		btn_doFindRoomList->SetIsEnabled( true );
+		// txt_findingRooms를 안 보이게 하고싶다.
+		txt_findingRooms->SetVisibility( ESlateVisibility::Hidden );
+	}
 }
 
 void ULobbyWidget::OnMyValueChage_maxPlayer( float value )
