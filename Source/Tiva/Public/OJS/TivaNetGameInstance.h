@@ -49,9 +49,9 @@ public:
 	FAddRoomInfoDelegate onAddRoomInfoDelegate;
 	FFindingRoomsDelegate onFindingRoomsDelegate;
 
-	FString myNickName = TEXT( "JacobyiPlayer" );
+	FString myNickName = TEXT( "TioPlayer" );
 	// 현재 입장한 방의 이름을 기억하고싶다.
-	FString myRoomName = TEXT( "JacobyiRoom" );
+	FString myRoomName = TEXT( "TivaRoom" );
 
 
 	void CreateRoom( int32 maxPlayerCount , FString roomName );
