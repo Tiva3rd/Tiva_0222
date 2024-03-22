@@ -17,6 +17,8 @@
 UBossFSM::UBossFSM()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+
+	SetIsReplicatedByDefault(true);
 }
 
 
@@ -24,17 +26,17 @@ void UBossFSM::BeginPlay()
 {
 	Super::BeginPlay();
 
-	me = Cast<ABossEnemy>( GetOwner() );
-	ai = Cast<AAIController>( me->GetController() );
-	bossAnim = Cast<UBossAnim>( me->GetMesh()->GetAnimInstance() );
+	me = Cast<ABossEnemy>(GetOwner());
+	ai = Cast<AAIController>(me->GetController());
+	bossAnim = Cast<UBossAnim>(me->GetMesh()->GetAnimInstance());
 
 	TArray<AActor*> TempArray;
-	UGameplayStatics::GetAllActorsOfClass( GetWorld() , AhouseTargetColumn::StaticClass() , TempArray );
+	UGameplayStatics::GetAllActorsOfClass(GetWorld() , AhouseTargetColumn::StaticClass() , TempArray);
 	for (int32 i = 0; i < TempArray.Num(); ++i)
 	{
-		mainTarget = Cast<AhouseTargetColumn>( TempArray[i] );
+		mainTarget = Cast<AhouseTargetColumn>(TempArray[i]);
 
-		if (mainTarget->GetActorLabel().Contains( TEXT( "BP_houseTargetColumn" ) ))
+		if (mainTarget->GetActorLabel().Contains(TEXT("BP_houseTargetColumn")))
 		{
 			break;
 		}
@@ -46,22 +48,25 @@ void UBossFSM::BeginPlay()
 
 
 // Called every frame
-void UBossFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction )
+void UBossFSM::TickComponent(float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent( DeltaTime , TickType , ThisTickFunction );
+	Super::TickComponent(DeltaTime , TickType , ThisTickFunction);
 
 	switch (state)
 	{
-	case EBoss_Enemy::IDLE:				        TickIdle();				break;
-	case EBoss_Enemy::MOVE:				        TickMove();				break;
-	case EBoss_Enemy::ATTACK:					TickAttack();			break;
-	case EBoss_Enemy::DEAD:				        TickDead();				break;
+	case EBoss_Enemy::IDLE: TickIdle();
+		break;
+	case EBoss_Enemy::MOVE: TickMove();
+		break;
+	case EBoss_Enemy::ATTACK: TickAttack();
+		break;
+	case EBoss_Enemy::DEAD: TickDead();
+		break;
 	}
 
-	me->FindChoosePlayer();
-
 	if (state != EBoss_Enemy::DEAD && me->bIsDie == true)
-		SetState( EBoss_Enemy::DEAD );
+		SetState(EBoss_Enemy::DEAD);
+
 }
 
 
@@ -69,50 +74,49 @@ void UBossFSM::TickComponent( float DeltaTime , ELevelTick TickType , FActorComp
 void UBossFSM::TickIdle()
 {
 	if (mainTarget)
-		SetState( EBoss_Enemy::MOVE );
+		SetState(EBoss_Enemy::MOVE);
 }
 
 
 //////////////////////////////////////// MOVE ////////////////////////////////////////
 void UBossFSM::TickMove()
 {
+	me->FindChoosePlayer();
+
 	if (nullptr == ai)
 		return;
 
-	bool chaseHome = bossAnim->bIsChaseHome;      // bossAnim 에서 bIsChaseHome = true
-	bool chasePlayer = bossAnim->bIsChasePlayer;
-
 	FVector destinationToHome = mainTarget->GetActorLocation();
-	float distanceToHome = mainTarget->GetDistanceTo( me );
+	float distanceToHome = mainTarget->GetDistanceTo(me);
 
 	FVector destinationToPlayer = me->playerTarget->GetActorLocation();
-	float distanceToPlayer = me->playerTarget->GetDistanceTo( me );
+	float distanceToPlayer = me->playerTarget->GetDistanceTo(me);
 
 
-	auto ns = UNavigationSystemV1::GetNavigationSystem( GetWorld() );
+	auto ns = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	FAIMoveRequest req;
-	req.SetAcceptanceRadius( 2000 );
-	req.SetGoalLocation( destinationToHome );
+	req.SetAcceptanceRadius(2000);
+	req.SetGoalLocation(destinationToHome);
 	FPathFindingQuery query;
-	ai->BuildPathfindingQuery( req , query );
-	FPathFindingResult r = ns->FindPathSync( query );
+	ai->BuildPathfindingQuery(req , query);
+	FPathFindingResult r = ns->FindPathSync(query);
 
 	// 만약 타겟이 있다면
 	if (r.Result == ENavigationQueryResult::Success)
 	{
-		ai->MoveToLocation( destinationToHome , 150 );
+		ai->MoveToLocation(destinationToHome , 100);
 		if (distanceToHome < attackDistance)
 		{
-			SetState( EBoss_Enemy::ATTACK );
+			SetState(EBoss_Enemy::ATTACK);
 			bossAnim->bIsAttack = true;
 		}
 
 		else if (distanceToPlayer < chasePlayerReach)
 		{
-			ai->MoveToLocation( destinationToPlayer , 150 );
+			ai->MoveToLocation(destinationToPlayer , 100);
 			if (distanceToPlayer < attackDistance)
 			{
-				SetState( EBoss_Enemy::ATTACK );
+				SetState(EBoss_Enemy::ATTACK);
 				bossAnim->bIsAttack = true;
 			}
 		}
@@ -131,21 +135,20 @@ void UBossFSM::TickAttack()
 	if (curTime > attackDelayTime)
 	{
 		curTime = 0;
-		float distance = mainTarget->GetDistanceTo( me );
+		float distance = mainTarget->GetDistanceTo(me);
 
 		if (distance > attackDistance/* || distance < chasePlayerReach*/)
-			SetState( EBoss_Enemy::MOVE );
+			SetState(EBoss_Enemy::MOVE);
 		else
 			bossAnim->bIsAttack = true;
 	}
 }
 
 
-
 void UBossFSM::DoDamageEnd()
 {
-	SetState( EBoss_Enemy::MOVE );
-	me->GetCharacterMovement()->SetMovementMode( MOVE_Walking );
+	SetState(EBoss_Enemy::MOVE);
+	me->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 }
 
 
@@ -153,30 +156,30 @@ void UBossFSM::DoDamageEnd()
 void UBossFSM::TickDead()
 {
 	UE_LOG(LogTemp , Warning , TEXT( "BossState : Dead" ));
-	me->GetCharacterMovement()->SetMovementMode( MOVE_None );
-	me->GetCapsuleComponent()->SetCollisionEnabled( ECollisionEnabled::NoCollision );
+	me->GetCharacterMovement()->SetMovementMode(MOVE_None);
+	me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-void UBossFSM::SetState( EBoss_Enemy next )
+void UBossFSM::SetState(EBoss_Enemy next)
 {
-	ServerSetState( next );
+	ServerSetState(next);
 }
 
-void UBossFSM::ServerSetState_Implementation( EBoss_Enemy nextState )
+void UBossFSM::ServerSetState_Implementation(EBoss_Enemy nextState)
 {
-	MultiCastSetStaet( nextState );
+	MultiCastSetStaet(nextState);
 }
 
-void UBossFSM::MultiCastSetStaet_Implementation( EBoss_Enemy nextState )
+void UBossFSM::MultiCastSetStaet_Implementation(EBoss_Enemy nextState)
 {
 	state = nextState;
 	curTime = 0;
 }
 
-void UBossFSM::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+void UBossFSM::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME( UBossFSM , state );
+	DOREPLIFETIME(UBossFSM , state);
+	DOREPLIFETIME(UBossFSM , bIsAttack);
 }
-

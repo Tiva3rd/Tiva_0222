@@ -22,7 +22,7 @@ AWolf::AWolf()
 
 	attackComp = CreateDefaultSubobject<USphereComponent>(TEXT("attackSphere"));
 	attackComp->SetupAttachment(GetMesh() , TEXT("BiteAttack"));
-	attackComp->SetWorldScale3D(FVector(0.5f));
+	attackComp->SetWorldScale3D(FVector(1.0f));
 
 	bReplicates = true;
 	SetReplicateMovement(true);
@@ -64,7 +64,7 @@ void AWolf::WolfTakeDamage(float damage)
 void AWolf::ServerWolfTakeDamage_Implementation(float damage)
 {
 	WolfHP -= damage;
-	MultiCastWolfTakeDamage(damage);
+	MultiCastWolfTakeDamage(WolfHP);
 }
 
 void AWolf::MultiCastWolfTakeDamage_Implementation(float newHP)

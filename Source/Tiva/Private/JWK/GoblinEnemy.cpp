@@ -40,7 +40,6 @@ void AGoblinEnemy::BeginPlay()
 
 	NetUpdateFrequency = 100;
 }
-
 // Called every frame
 void AGoblinEnemy::Tick(float DeltaTime)
 {

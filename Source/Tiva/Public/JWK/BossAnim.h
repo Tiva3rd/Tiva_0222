@@ -41,7 +41,8 @@ public:
 	bool bIsChasePlayer = false;
 
 	UPROPERTY( EditAnywhere , BlueprintReadWrite )
-	bool bIsAttack = false;
+	bool bIsAttack;
+	
 
 	UFUNCTION()
 	void AnimNotify_BossAttack();

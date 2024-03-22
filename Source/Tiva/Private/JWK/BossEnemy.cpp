@@ -62,7 +62,7 @@ void ABossEnemy::BeginPlay()
 	NetUpdateFrequency = 100;
 
 	bossHPWidget = Cast<UBossHPWidget>(bossHealthUI->GetWidget());
-	
+
 	attackSphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 

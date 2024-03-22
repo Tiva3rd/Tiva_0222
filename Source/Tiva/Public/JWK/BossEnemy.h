@@ -47,25 +47,25 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void BossTakeDamaged(int32 damage);
 
-	UFUNCTION(Server, Reliable)
-	void ServerBossTakeDamged( int32 damage );
+	UFUNCTION(Server , Reliable)
+	void ServerBossTakeDamged(int32 damage);
 
-	UFUNCTION( NetMulticast , Reliable )
-	void MultiBossTakeDamged( int32 hp );
+	UFUNCTION(NetMulticast , Reliable)
+	void MultiBossTakeDamged(int32 hp);
 
 	UPROPERTY(EditAnywhere)
 	int32 BossMaxHP = 12;
 
 	UPROPERTY(Replicated , EditAnywhere)
 	int32 BossHP = BossMaxHP;
-
+	
 	UPROPERTY(Replicated , EditAnywhere)
 	bool bIsAttacked = false;
 
 	UPROPERTY(Replicated , EditAnywhere)
 	bool bIsDie = false;
 
-	
+
 	//////////////////////////////////////// Boss Widget ////////////////////////////////////////
 	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UWidgetComponent* bossHealthUI;
@@ -80,7 +80,7 @@ public:
 	//////////////////////////////////////// 플레이어 대미지 처리 ////////////////////////////////////////
 	UPROPERTY(EditAnywhere)
 	class ATivaCharacter* player;
-	
+
 	////////////////////////////////////////////// NetWork //////////////////////////////////////////////
 	UFUNCTION()
 	void FindChoosePlayer();

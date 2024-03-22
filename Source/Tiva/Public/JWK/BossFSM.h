@@ -55,6 +55,9 @@ public:
 	UPROPERTY( Replicated , EditAnywhere , BlueprintReadOnly )
 	EBoss_Enemy state;
 
+	UPROPERTY(Replicated , EditAnywhere)
+	bool bIsAttack = false;
+	
 	// Boss Enemy 의 AI
 	UPROPERTY()
 	class AAIController* ai;
@@ -77,7 +80,7 @@ public:
 	void TickDead();
 
 	float curTime;
-	float attackDelayTime = 3.5f;
+	float attackDelayTime = 2.0f;
 
 	//UPROPERTY(EditAnywhere)
 	//class UAnimMontage* bossMontage;

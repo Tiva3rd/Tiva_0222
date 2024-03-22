@@ -2,7 +2,6 @@
 
 
 #include "JWK/BossAnim.h"
-
 #include "Components/SphereComponent.h"
 #include "JWK/BossEnemy.h"
 
@@ -44,12 +43,12 @@ void UBossAnim::AnimNotify_BossAttack()
 
 void UBossAnim::AnimNotify_BossAttackCollision()
 {
+	// 공격 끝나면 Collision OFF
 	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void UBossAnim::AnimNotify_AttackEnd()
 {
-	// 공격 끝나면 Collision OFF
 	bIsAttack = false;
 }
 
@@ -67,15 +66,3 @@ void UBossAnim::PlayHitAnimation()
 {
 	Montage_Play(BossHit);
 }
-
-//void UBossAnim::AnimNotify_DamageEnd()
-//{
-//}
-//
-//void UBossAnim::AnimNotify_DieEnd()
-//{
-//}
-//
-//void UBossAnim::AnimNotify_Hit()
-//{
-//}

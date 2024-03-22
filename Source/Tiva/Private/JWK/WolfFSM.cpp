@@ -15,6 +15,8 @@
 UWolfFSM::UWolfFSM()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+
+	SetIsReplicatedByDefault(true);
 }
 
 
@@ -66,7 +68,7 @@ void UWolfFSM::TickIdle()
 	{
 		float distPlayer = me->playerTarget->GetDistanceTo(me);
 
-		UE_LOG(LogTemp , Warning , TEXT( "State : Idle" ));
+		//UE_LOG(LogTemp , Warning , TEXT( "State : Idle" ));
 
 		if (distPlayer <= chasePlayerReach)
 			SetState(EWolf::MOVE);
@@ -101,8 +103,8 @@ void UWolfFSM::TickMove()
 	{
 		if (distanceToPlayer <= chasePlayerReach)
 		{
-			UE_LOG(LogTemp , Warning , TEXT( "State : Move" ));
-			ai->MoveToLocation(destinationToPlayer , 100);
+			//UE_LOG(LogTemp , Warning , TEXT( "State : Move" ));
+			ai->MoveToLocation(destinationToPlayer , 150);
 
 			if (distanceToPlayer <= attackDistance)
 			{
@@ -121,7 +123,7 @@ void UWolfFSM::TickMove()
 void UWolfFSM::TickAttack()
 {
 	curTime += GetWorld()->GetDeltaSeconds();
-	UE_LOG(LogTemp , Warning , TEXT( "State : Attack" ));
+	//UE_LOG(LogTemp , Warning , TEXT( "State : Attack" ));
 
 	if (curTime > attackDelayTime)
 	{
