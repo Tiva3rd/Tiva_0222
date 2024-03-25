@@ -50,6 +50,7 @@ void UWolfAnim::AnimNotify_WolfAttackCollision()
 
 void UWolfAnim::AnimNotify_WolfAttackEnd()
 {
+	UE_LOG(LogTemp , Warning , TEXT("Wolf Attack? : %d") , bIsAttack);
 	bIsAttack = false;
 }
 

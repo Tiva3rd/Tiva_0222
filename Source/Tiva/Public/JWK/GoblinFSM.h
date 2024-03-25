@@ -6,16 +6,16 @@
 #include "Components/ActorComponent.h"
 #include "GoblinFSM.generated.h"
 
-UENUM( BlueprintType )
+UENUM(BlueprintType)
 enum class EGoblin_Enemy : uint8
 {
-	IDLE			 UMETA( DisplayName = "IDLE" ) ,
-	MOVE			 UMETA( DisplayName = "MOVE" ) ,
-	ATTACK			 UMETA( DisplayName = "ATTACK" ) ,
-	DEAD			 UMETA( DisplayName = "DEAD" )
+	IDLE UMETA(DisplayName = "IDLE") ,
+	MOVE UMETA(DisplayName = "MOVE") ,
+	ATTACK UMETA(DisplayName = "ATTACK") ,
+	DEAD UMETA(DisplayName = "DEAD")
 };
 
-UCLASS( ClassGroup = (Custom) , meta = (BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom) , meta = (BlueprintSpawnableComponent))
 class TIVA_API UGoblinFSM : public UActorComponent
 {
 	GENERATED_BODY()
@@ -30,22 +30,26 @@ protected:
 
 public:
 	// Called every frame
-	virtual void TickComponent( float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction ) override;
+	virtual void TickComponent(float DeltaTime , ELevelTick TickType ,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 
 	// 목적지를 테스트 Pawn --> 배치되어있는 Pawn 클래스 FSM Detail 에서 수정
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class AhouseTargetColumn* mainTarget;
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	class AGoblinEnemy* me;
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	class UGoblinAnim* goblinAnim;
 
 	// Goblin Enemy의 State
-	UPROPERTY( Replicated , EditAnywhere , BlueprintReadOnly )
+	UPROPERTY(Replicated , EditAnywhere , BlueprintReadOnly)
 	EGoblin_Enemy state;
+
+	UPROPERTY(Replicated , EditAnywhere)
+	bool bIsAttack = false;
 
 	// Goblin Enemy 의 AI
 	UPROPERTY()
@@ -53,9 +57,9 @@ public:
 
 
 	// Goblin Attack Range
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	float attackDistance = 200;
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	float chasePlayerReach = 1500;
 
 
@@ -68,13 +72,13 @@ public:
 	float curTime;
 	float attackDelayTime = 3.5f;
 
-	void SetState( EGoblin_Enemy next );
+	void SetState(EGoblin_Enemy next);
 
-	UFUNCTION( Server , Reliable )
-	void ServerSetState( EGoblin_Enemy nextState );
+	UFUNCTION(Server , Reliable)
+	void ServerSetState(EGoblin_Enemy nextState);
 
-	UFUNCTION( NetMulticast , Reliable )
-	void MultiCastSetStaet( EGoblin_Enemy nextState );
+	UFUNCTION(NetMulticast , Reliable)
+	void MultiCastSetStaet(EGoblin_Enemy nextState);
 
-	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

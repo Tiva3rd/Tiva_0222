@@ -28,11 +28,12 @@ void UBossAnim::NativeUpdateAnimation(float DeltaSeconds)
 
 	if (nullptr == bossFSM)
 	{
-		UE_LOG(LogTemp , Warning , TEXT("nullptr == bossFSM"));
+		// UE_LOG(LogTemp , Warning , TEXT("nullptr == bossFSM"));
 		return;
 	}
 
 	state = bossFSM->state;
+	bIsAttack = bossFSM->bIsAttack;
 }
 
 void UBossAnim::AnimNotify_BossAttack()
@@ -49,7 +50,7 @@ void UBossAnim::AnimNotify_BossAttackCollision()
 
 void UBossAnim::AnimNotify_AttackEnd()
 {
-	bIsAttack = false;
+	bossFSM->bIsAttack = false;
 }
 
 void UBossAnim::AnimNotify_BossDamageEnd()

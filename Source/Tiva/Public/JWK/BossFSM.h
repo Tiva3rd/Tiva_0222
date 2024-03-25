@@ -7,17 +7,17 @@
 #include "BossFSM.generated.h"
 
 
-UENUM( BlueprintType )
+UENUM(BlueprintType)
 enum class EBoss_Enemy : uint8
 {
-	IDLE			 UMETA( DisplayName = "IDLE" ) ,
-	MOVE			 UMETA( DisplayName = "MOVE" ) ,
-	ATTACK			 UMETA( DisplayName = "ATTACK" ) ,
-	DAMAGED			 UMETA( DisplayName = "DAMAGED" ) ,
-	DEAD			 UMETA( DisplayName = "DEAD" )
+	IDLE UMETA(DisplayName = "IDLE") ,
+	MOVE UMETA(DisplayName = "MOVE") ,
+	ATTACK UMETA(DisplayName = "ATTACK") ,
+	DAMAGED UMETA(DisplayName = "DAMAGED") ,
+	DEAD UMETA(DisplayName = "DEAD")
 };
 
-UCLASS( ClassGroup = (Custom) , meta = (BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom) , meta = (BlueprintSpawnableComponent))
 class TIVA_API UBossFSM : public UActorComponent
 {
 	GENERATED_BODY()
@@ -30,45 +30,43 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-
 public:
 	// Called every frame
-	virtual void TickComponent( float DeltaTime , ELevelTick TickType , FActorComponentTickFunction* ThisTickFunction ) override;
+	virtual void TickComponent(float DeltaTime , ELevelTick TickType ,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	// 목적지를 테스트 Pawn --> 배치되어있는 Pawn 클래스 FSM Detail 에서 수정
 	//UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	//class APawn* mainTarget;
 
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	UPROPERTY(EditAnywhere , BlueprintReadOnly)
 	class AhouseTargetColumn* mainTarget;
 
 	//UPROPERTY()
 	//class AActor* playerTarget;
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	class ABossEnemy* me;
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	class UBossAnim* bossAnim;
 
 	// Boss Enemy의 State
-	UPROPERTY( Replicated , EditAnywhere , BlueprintReadOnly )
+	UPROPERTY(Replicated , EditAnywhere , BlueprintReadOnly)
 	EBoss_Enemy state;
 
 	UPROPERTY(Replicated , EditAnywhere)
 	bool bIsAttack = false;
-	
+
 	// Boss Enemy 의 AI
 	UPROPERTY()
 	class AAIController* ai;
 
 
-
-
 	// Boss Attack Range
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	float attackDistance = 200;
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	float chasePlayerReach = 600;
 
 
@@ -80,18 +78,18 @@ public:
 	void TickDead();
 
 	float curTime;
-	float attackDelayTime = 2.0f;
+	float attackDelayTime = 4.0f;
 
 	//UPROPERTY(EditAnywhere)
 	//class UAnimMontage* bossMontage;
 
-	void SetState( EBoss_Enemy next );
+	void SetState(EBoss_Enemy next);
 
-	UFUNCTION( Server , Reliable )
-	void ServerSetState( EBoss_Enemy nextState );
+	UFUNCTION(Server , Reliable)
+	void ServerSetState(EBoss_Enemy nextState);
 
-	UFUNCTION( NetMulticast , Reliable )
-	void MultiCastSetStaet( EBoss_Enemy nextState );
+	UFUNCTION(NetMulticast , Reliable)
+	void MultiCastSetStaet(EBoss_Enemy nextState);
 
-	virtual void GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

@@ -40,6 +40,7 @@ void AGoblinEnemy::BeginPlay()
 
 	NetUpdateFrequency = 100;
 }
+
 // Called every frame
 void AGoblinEnemy::Tick(float DeltaTime)
 {
@@ -80,14 +81,9 @@ void AGoblinEnemy::MultiCastGoblinTakeDamage_Implementation(int32 newHp)
 
 void AGoblinEnemy::FindChoosePlayer()
 {
-	// GoblinFSM 에서 TickIdle에서 PlayerSearch를 호출
-	//if (playerTarget)
-	//	return;
-
 	// 레벨에 있는 ATivaCharacter 객체들을 다 검사해서 chasePlayerReach안에 있고
 	// 그중에서도 가장 까가운녀석을 내 playerTarget으로 지정
-	auto pc = GetWorld()->GetFirstPlayerController();
-	if (pc->HasAuthority())
+	if (HasAuthority())
 	{
 		playerTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
 		float tempDist = goblinFSM->chasePlayerReach;

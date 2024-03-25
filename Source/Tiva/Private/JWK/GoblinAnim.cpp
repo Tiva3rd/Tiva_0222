@@ -25,10 +25,16 @@ void UGoblinAnim::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
+	me = Cast<AGoblinEnemy>(TryGetPawnOwner());
+
+	if (me)
+		goblinFSM = me->goblinFSM;
+
 	if (nullptr == goblinFSM)
 		return;
 
 	state = goblinFSM->state;
+	bIsAttack = goblinFSM->bIsAttack;
 }
 
 void UGoblinAnim::AnimNotify_AttackStart()
@@ -48,12 +54,9 @@ void UGoblinAnim::AnimNotify_AttackStart()
 
 void UGoblinAnim::AnimNotify_AttackEnd()
 {
-	bIsAttack = false;
+	goblinFSM->bIsAttack = false;
+	// UE_LOG(LogTemp , Warning , TEXT("Goblin Attack? : %d") , bIsAttack);
 	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-}
-
-void UGoblinAnim::AnimNotify_GoblinHit()
-{
 }
 
 void UGoblinAnim::PlayDeathAnimation()

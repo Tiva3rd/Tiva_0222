@@ -108,7 +108,7 @@ void UBossFSM::TickMove()
 		if (distanceToHome < attackDistance)
 		{
 			SetState(EBoss_Enemy::ATTACK);
-			bossAnim->bIsAttack = true;
+			bIsAttack = true;
 		}
 
 		else if (distanceToPlayer < chasePlayerReach)
@@ -117,7 +117,7 @@ void UBossFSM::TickMove()
 			if (distanceToPlayer < attackDistance)
 			{
 				SetState(EBoss_Enemy::ATTACK);
-				bossAnim->bIsAttack = true;
+				bIsAttack = true;
 			}
 		}
 	}
@@ -140,7 +140,7 @@ void UBossFSM::TickAttack()
 		if (distance > attackDistance/* || distance < chasePlayerReach*/)
 			SetState(EBoss_Enemy::MOVE);
 		else
-			bossAnim->bIsAttack = true;
+			bIsAttack = true;
 	}
 }
 
@@ -155,9 +155,17 @@ void UBossFSM::DoDamageEnd()
 //////////////////////////////////////// DEAD ////////////////////////////////////////
 void UBossFSM::TickDead()
 {
-	UE_LOG(LogTemp , Warning , TEXT( "BossState : Dead" ));
+	// UE_LOG(LogTemp , Warning , TEXT( "BossState : Dead" ));
 	me->GetCharacterMovement()->SetMovementMode(MOVE_None);
 	me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	curTime += GetWorld()->GetDeltaSeconds();
+
+	if (curTime > 3)
+	{
+		curTime =0;
+		me->Destroy();
+	}
 }
 
 void UBossFSM::SetState(EBoss_Enemy next)

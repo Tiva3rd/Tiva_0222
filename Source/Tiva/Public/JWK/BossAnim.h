@@ -56,9 +56,6 @@ public:
 	UFUNCTION()
 	void AnimNotify_BossDamageEnd();
 
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
-	class ABossEnemy* bIsDie;
-
 	UPROPERTY( EditAnywhere )
 	class UAnimMontage* BossDeath;
 

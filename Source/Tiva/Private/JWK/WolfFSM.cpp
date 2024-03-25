@@ -143,9 +143,17 @@ void UWolfFSM::DoDamageEnd()
 
 void UWolfFSM::TickDead()
 {
-	UE_LOG(LogTemp , Warning , TEXT( "WolfState : Dead" ));
+	// UE_LOG(LogTemp , Warning , TEXT( "WolfState : Dead" ));
 	me->GetCharacterMovement()->SetMovementMode(MOVE_None);
 	me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	curTime += GetWorld()->GetDeltaSeconds();
+
+	if (curTime > 3)
+	{
+		curTime =0;
+		me->Destroy();
+	}
 }
 
 void UWolfFSM::SetState(EWolf next)

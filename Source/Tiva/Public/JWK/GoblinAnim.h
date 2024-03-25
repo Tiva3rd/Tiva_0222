@@ -32,16 +32,7 @@ public:
 	class AGoblinEnemy* me;
 
 	UPROPERTY(EditAnywhere , BlueprintReadWrite)
-	bool bIsChaseHome = true;
-
-	UPROPERTY(EditAnywhere , BlueprintReadWrite)
-	bool bIsChasePlayer = false;
-
-	UPROPERTY(EditAnywhere , BlueprintReadWrite)
-	bool bIsAttack = false;
-
-	UPROPERTY(EditAnywhere , BlueprintReadWrite)
-	bool bIsFire = false;
+	bool bIsAttack;
 
 	UFUNCTION()
 	void AnimNotify_AttackStart();
@@ -51,9 +42,6 @@ public:
 
 	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UParticleSystem* fireAttack;
-
-	UFUNCTION()
-	void AnimNotify_GoblinHit();
 
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* GoblinDeath;
