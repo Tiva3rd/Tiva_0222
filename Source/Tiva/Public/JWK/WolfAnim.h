@@ -16,28 +16,26 @@ class TIVA_API UWolfAnim : public UAnimInstance
 	GENERATED_BODY()
 
 public:
-
 	virtual void NativeInitializeAnimation() override;
-	virtual void NativeUpdateAnimation( float DeltaSeconds ) override;
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	UPROPERTY(EditAnywhere , BlueprintReadOnly)
 	float speed = 1000;
 
 	UPROPERTY()
 	class UWolfFSM* wolfFSM;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	EWolf state;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class AWolf* me;
 
 
-
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	UPROPERTY(EditAnywhere , BlueprintReadOnly)
 	bool bIsChasePlayer = false;
 
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	UPROPERTY(EditAnywhere , BlueprintReadOnly)
 	bool bIsAttack = false;
 
 	UFUNCTION()
@@ -45,14 +43,12 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_WolfAttackCollision();
-	
+
 	UFUNCTION()
 	void AnimNotify_WolfAttackEnd();
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	class UAnimMontage* WolfDeath;
 
 	void PlayDeathAnimation();
-	//UPROPERTY( EditAnywhere , BlueprintReadOnly )
-	//class AWolf* bIsDie;
 };

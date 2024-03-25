@@ -156,6 +156,7 @@ void UGoblinFSM::TickDead()
 	me->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	curTime += GetWorld()->GetDeltaSeconds();
 
+	
 	if (curTime > 3)
 	{
 		curTime = 0;

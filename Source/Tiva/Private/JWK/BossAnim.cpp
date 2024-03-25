@@ -4,6 +4,7 @@
 #include "JWK/BossAnim.h"
 #include "Components/SphereComponent.h"
 #include "JWK/BossEnemy.h"
+#include "Kismet/GameplayStatics.h"
 
 void UBossAnim::NativeInitializeAnimation()
 {
@@ -58,8 +59,14 @@ void UBossAnim::AnimNotify_BossDamageEnd()
 	bossFSM->DoDamageEnd();
 }
 
+void UBossAnim::AnimNotify_BossHit()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(),hitSound);
+}
+
 void UBossAnim::PlayDeathAnimation()
 {
+	UGameplayStatics::PlaySound2D(GetWorld() , dieSound);
 	Montage_Play(BossDeath);
 }
 

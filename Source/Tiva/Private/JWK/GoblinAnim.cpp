@@ -61,6 +61,11 @@ void UGoblinAnim::AnimNotify_AttackEnd()
 	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void UGoblinAnim::AnimNotify_GoblinDie()
+{
+	UGameplayStatics::PlaySound2D(GetWorld() , dieSound);
+}
+
 void UGoblinAnim::PlayDeathAnimation()
 {
 	Montage_Play(GoblinDeath);

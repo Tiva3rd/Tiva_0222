@@ -16,58 +16,67 @@ class TIVA_API UBossAnim : public UAnimInstance
 	GENERATED_BODY()
 
 public:
-
 	virtual void NativeInitializeAnimation() override;
-	virtual void NativeUpdateAnimation( float DeltaSeconds ) override;
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	float speed = 0;
 
 	UPROPERTY()
 	class UBossFSM* bossFSM;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	EBoss_Enemy state;
 
-	UPROPERTY( EditAnyWhere , BlueprintReadOnly )
+	UPROPERTY(EditAnyWhere , BlueprintReadOnly)
 	class ABossEnemy* me;
 
 
-	
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	bool bIsChaseHome = true;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	bool bIsChasePlayer = false;
 
-	UPROPERTY( EditAnywhere , BlueprintReadWrite )
+	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	bool bIsAttack;
-	
+
 
 	UFUNCTION()
 	void AnimNotify_BossAttack();
 
 	UFUNCTION()
 	void AnimNotify_BossAttackCollision();
-	
+
 	UFUNCTION()
 	void AnimNotify_AttackEnd();
 
 	UFUNCTION()
 	void AnimNotify_BossDamageEnd();
 
-	UPROPERTY( EditAnywhere )
+
+	UFUNCTION()
+	void AnimNotify_BossHit();
+	
+	UPROPERTY(EditAnywhere)
 	class UAnimMontage* BossDeath;
 
 	UFUNCTION()
 	void PlayDeathAnimation();
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY(EditAnywhere)
 	class UAnimMontage* BossHit;
 
 	UFUNCTION()
 	void PlayHitAnimation();
 
-	UPROPERTY( EditAnywhere , BlueprintReadOnly )
+	UPROPERTY(EditAnywhere , BlueprintReadOnly)
 	class ABossEnemy* Dealdamage;
+
+	////////////////////// Sound ////////////////////////
+	UPROPERTY(EditAnywhere)
+	class USoundBase* hitSound;
+	
+	UPROPERTY(EditAnywhere)
+	class USoundBase* dieSound;
 };

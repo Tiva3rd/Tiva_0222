@@ -5,6 +5,7 @@
 
 #include "Components/SphereComponent.h"
 #include "JWK/Wolf.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 void UWolfAnim::NativeInitializeAnimation()
@@ -53,6 +54,7 @@ void UWolfAnim::AnimNotify_WolfAttackEnd()
 	UE_LOG(LogTemp , Warning , TEXT("Wolf Attack? : %d") , bIsAttack);
 	bIsAttack = false;
 }
+
 
 void UWolfAnim::PlayDeathAnimation()
 {

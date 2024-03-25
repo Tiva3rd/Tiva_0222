@@ -40,6 +40,9 @@ public:
 	UFUNCTION()
 	void AnimNotify_AttackEnd();
 
+	UFUNCTION()
+	void AnimNotify_GoblinDie();
+
 	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UParticleSystem* fireAttack;
 
@@ -54,4 +57,7 @@ public:
 	//////////////////////// Sound ////////////////////////
 	UPROPERTY(EditAnywhere)
 	class USoundBase* fireSound;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* dieSound;
 };
