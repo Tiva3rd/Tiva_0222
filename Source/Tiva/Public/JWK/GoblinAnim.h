@@ -50,4 +50,8 @@ public:
 
 	UPROPERTY(EditAnywhere , BlueprintReadWrite)
 	class UParticleSystemComponent* fire;
+
+	//////////////////////// Sound ////////////////////////
+	UPROPERTY(EditAnywhere)
+	class USoundBase* fireSound;
 };

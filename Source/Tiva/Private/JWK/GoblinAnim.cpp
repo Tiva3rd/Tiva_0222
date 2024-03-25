@@ -43,6 +43,8 @@ void UGoblinAnim::AnimNotify_AttackStart()
 
 	fire = UGameplayStatics::SpawnEmitterAtLocation(GetWorld() , fireAttack , s);
 
+	UGameplayStatics::PlaySound2D(GetWorld() , fireSound);
+
 	me->attackSphereComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	FTimerHandle handle;

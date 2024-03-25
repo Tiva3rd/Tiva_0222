@@ -58,11 +58,11 @@ public:
 
 	UPROPERTY(Replicated , EditAnywhere)
 	int32 BossHP = BossMaxHP;
-	
+
 	UPROPERTY(Replicated , EditAnywhere)
 	bool bIsAttacked = false;
 
-	UPROPERTY(Replicated , EditAnywhere)
+	UPROPERTY(Replicated , EditAnywhere , BlueprintReadWrite)
 	bool bIsDie = false;
 
 
